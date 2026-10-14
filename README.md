@@ -16,6 +16,21 @@
 
 项目高度适配百花大学物理实验教材，精准解决学生数据处理难题。
 
+## 项目框架
+
+```
+pages/                   A 主负责：页面与交互
+experiments/
+    实验/
+    config.js            C 主负责：字段、单位、实验说明
+
+    calculate.js         B 主负责：实验计算
+    validate.js          B 主负责：输入规则校验
+utils/                   按功能指定负责人
+tests/                   B、C 配合：算法与参考数据验证
+docs/                    C 主负责：实验规则、测试和答辩材料
+```
+
 ## 项目地址
 
 `https://github.com/lighthouse333/BUCT_lab`
