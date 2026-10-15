@@ -1,0 +1,13 @@
+# 微信开发者工具的个人配置
+/project.private.config.json
+
+# 本地依赖（以后使用 npm 时）
+node_modules/
+
+# 日志和操作系统临时文件
+*.log
+.DS_Store
+Thumbs.db
+
+# 个人 IDE 配置
+.idea/
