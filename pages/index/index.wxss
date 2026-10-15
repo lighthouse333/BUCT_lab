@@ -1,62 +1,40 @@
-/**index.wxss**/
-page {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-.scrollarea {
-  flex: 1;
-  overflow-y: hidden;
-}
-
-.userinfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #aaa;
-  width: 80%;
-}
-
-.userinfo-avatar {
-  overflow: hidden;
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
-}
-
-.usermotto {
-  margin-top: 200px;
-}
-
-.avatar-wrapper {
-  padding: 0;
-  width: 56px !important;
-  border-radius: 8px;
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
-.avatar {
-  display: block;
-  width: 56px;
-  height: 56px;
-}
-
-.nickname-wrapper {
-  display: flex;
-  width: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-  border-top: .5px solid rgba(0, 0, 0, 0.1);
-  border-bottom: .5px solid rgba(0, 0, 0, 0.1);
-  color: black;
-}
-
-.nickname-label {
-  width: 105px;
-}
-
-.nickname-input {
-  flex: 1;
-}
+page { background: #f4f6fa; color: #1e293b; }
+.selection-page { padding: 40rpx 32rpx 48rpx; padding-bottom: calc(48rpx + env(safe-area-inset-bottom)); }
+.page-header { margin-bottom: 36rpx; }
+.eyebrow { display: block; color: #204fa3; font-size: 22rpx; font-weight: 700; letter-spacing: 4rpx; }
+.page-title { display: block; margin-top: 12rpx; font-size: 40rpx; line-height: 1.4; font-weight: 700; }
+.page-description { display: block; margin-top: 12rpx; font-size: 26rpx; color: #64748b; line-height: 1.6; }
+.search-box { display: flex; align-items: center; min-height: 92rpx; padding: 0 24rpx; border: 1rpx solid #dce3ed; border-radius: 18rpx; background: #fff; }
+.search-input { flex: 1; min-width: 0; height: 88rpx; font-size: 26rpx; }
+button::after { border: 0; }
+.text-button { flex-shrink: 0; margin: 0; padding: 12rpx 8rpx; background: transparent; color: #204fa3; font-size: 24rpx; line-height: 1.5; }
+.search-clear { margin-left: 12rpx; }
+.category-scroll { margin: 24rpx 0 32rpx; white-space: nowrap; }
+.category-list { display: flex; gap: 16rpx; }
+.category-button { flex-shrink: 0; margin: 0; padding: 14rpx 28rpx; border-radius: 999rpx; background: #e8edf5; color: #526176; font-size: 26rpx; line-height: 1.5; }
+.category-active { background: #204fa3; color: #fff; }
+.list-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20rpx; }
+.list-title { font-size: 30rpx; font-weight: 600; }
+.result-count { color: #64748b; font-size: 24rpx; }
+.experiment-list { display: block; }
+.experiment-card { display: flex; align-items: center; padding: 28rpx 24rpx; margin-bottom: 18rpx; border: 2rpx solid #e3e8f0; border-radius: 20rpx; background: #fff; }
+.experiment-selected { border-color: #204fa3; background: #eef4ff; }
+.experiment-number { flex-shrink: 0; align-self: flex-start; width: 56rpx; margin-top: 4rpx; font-size: 26rpx; font-weight: 600; color: #7b8ba3; }
+.experiment-selected .experiment-number { color: #204fa3; }
+.experiment-info { flex: 1; min-width: 0; }
+.experiment-name { display: block; font-size: 29rpx; font-weight: 500; line-height: 1.55; word-break: break-all; }
+.experiment-meta { display: block; margin-top: 12rpx; color: #64748b; font-size: 23rpx; line-height: 1.4; }
+.experiment-radio { flex-shrink: 0; margin-left: 18rpx; transform: scale(0.85); }
+.empty-state { padding: 72rpx 24rpx; text-align: center; background: #fff; border-radius: 20rpx; }
+.empty-title { display: block; font-size: 30rpx; font-weight: 600; }
+.empty-description { display: block; margin: 16rpx 0 28rpx; color: #64748b; font-size: 25rpx; line-height: 1.6; }
+.reset-button { width: 270rpx; padding: 18rpx; background: #edf3ff; color: #204fa3; font-size: 26rpx; line-height: 1.5; }
+.selection-footer { position: sticky; bottom: 20rpx; margin-top: 28rpx; padding: 24rpx; border: 1rpx solid #dce3ed; border-radius: 22rpx; background: #fff; box-shadow: 0 8rpx 32rpx rgba(30, 55, 90, 0.08); }
+.selection-summary { display: flex; align-items: flex-start; gap: 12rpx; margin-bottom: 20rpx; }
+.selection-copy { flex: 1; min-width: 0; }
+.selection-label { display: block; color: #64748b; font-size: 23rpx; }
+.selection-name { display: block; margin-top: 8rpx; font-size: 27rpx; line-height: 1.5; font-weight: 600; word-break: break-all; }
+.selection-hint { display: block; margin-top: 8rpx; font-size: 26rpx; color: #64748b; }
+.confirm-button { padding: 22rpx; border-radius: 14rpx; background: #204fa3; color: #fff; font-size: 29rpx; line-height: 1.5; font-weight: 600; }
+.confirm-button[disabled] { background: #e2e8f0; color: #8995a7; }
+.development-note { display: block; margin-top: 16rpx; color: #64748b; text-align: center; font-size: 22rpx; }
