@@ -79,6 +79,41 @@ const definitions = {
       table('image-l2', 'l₂ 测量', positionColumns(), sequence(4), { adjustable: true }),
     ],
   },
+  polarization: {
+    sourceSheet: '12 光的偏振',
+    note: '记录真实观察，不预填现象或偏振态。波片光轴名义角与实际角分列；不适用的观察项可填写“不适用”，方向图可在报告中补画。',
+    parameters: [],
+    tables: [
+      table('observations', '现象记录', [
+        fixed('operation', '操作', 220),
+        text('brightnessCycles', '明暗变化次数', { placeholder: '记录实际次数或明暗变化' }),
+        text('extinction', '有无消光', { placeholder: '记录实际消光情况' }),
+        text('brightAxes', '最亮轴关系'), text('extinctionAxes', '消光轴关系'), text('conclusion', '结论'),
+      ], [['起偏'], ['检偏'], ['布儒斯特窗']]),
+      table('quarter-wave-plate', '四分之一波片', [
+        fixed('nominalAngle', '名义角 / °', 170), number('actualAngle', '实际角 / °'),
+        text('brightness', '明暗变化'), text('extinction', '有无消光'),
+        text('axes', '长短轴方向'), text('polarizationState', '偏振态'),
+      ], [0, 15, 30, 45, 60, 75, 90].map(value => [String(value)]), { hint: '名义角为模板给定值；实际角按仪器读数填写，现象、轴方向及偏振态按观察记录。' }),
+    ],
+  },
+  'single-slit': {
+    sourceSheet: '13 单缝衍射',
+    note: '先记录衍射距离、探头位置及光强，再记录各级暗纹的左侧、中心及右侧位置。扫描表默认 50 点，可按实际数据增删，最多 200 点。',
+    parameters: [
+      parameter('slitWidth', '单缝宽度 a / mm', '', { positive: true }),
+      parameter('distanceLimit', '模板 Δz / cm', '0.05', { positive: true }),
+      parameter('positionLimit', '模板 Δx_k / mm', '0.004', { positive: true }),
+    ],
+    tables: [
+      table('distances', '衍射距离', [serial(), number('z', 'z / cm', { positive: true })], sequence(3), { adjustable: true }),
+      table('intensity-scan', '光强扫描', [serial(), number('position', '探头位置 / mm'), number('intensity', '光强 / mV')], sequence(50), { adjustable: true, maxRows: 200, hint: '位置单位为 mm，探测器读数单位为 mV。数据不足可续行；少于 50 点时可删除末尾空行。' }),
+      table('minima', '暗纹位置与距离', [
+        fixed('number', 'k'), number('left', '左极小 / mm'), number('center', '中心 O / mm'), number('right', '右极小 / mm'),
+        computed('leftDistance', '左距 / mm'), computed('rightDistance', '右距 / mm'), computed('meanDistance', '平均 x_k / mm'),
+      ], sequence(5), { adjustable: true, hint: 'k 为暗纹级次；左距、右距和平均 x_k 由后续数据处理生成。' }),
+    ],
+  },
   'zeeman-effect': {
     sourceSheet: '15 塞曼效应',
     note: '选择与课堂要求一致的圆环记录方案。切换方案保留当前页中已填内容，检查与复制仅包含当前方案及偏振现象。',

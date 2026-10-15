@@ -33,7 +33,7 @@ function createForm(experimentId) {
     parameters: definition.parameters.map((field, i) => ({ ...field, id: 'parameter-' + i, error: '' })),
     tables: definition.tables.map((item, tableIndex) => ({
       id: item.id, title: item.title, columns: item.columns, hint: item.hint || '',
-      adjustable: !!item.adjustable, modes: item.modes || [],
+      adjustable: !!item.adjustable, maxRows: item.maxRows || 60, modes: item.modes || [],
       visible: !item.modes || item.modes.includes(mode),
       width: item.columns.reduce((sum, column) => sum + column.width, 2),
       scrollTarget: '',
