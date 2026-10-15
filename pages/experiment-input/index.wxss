@@ -1,0 +1,19 @@
+@import "../spectral-analysis/index.wxss";
+
+.table-scroll { margin: 20rpx 0; }
+.cell { display: flex; flex-direction: column; justify-content: center; flex-shrink: 0; box-sizing: border-box; min-height: 94rpx; border-right: 2rpx solid #64748b; border-bottom: 2rpx solid #64748b; background: #eef4ff; }
+.heading-cell { padding: 16rpx 12rpx; min-height: 100rpx; background: #e8edf5; color: #334155; text-align: center; font-weight: 600; line-height: 1.6; }
+.cell input { width: 100%; height: 92rpx; padding: 0 12rpx; box-sizing: border-box; text-align: center; color: #204fa3; font-size: 25rpx; }
+.cell textarea { width: 100%; min-height: 94rpx; padding: 18rpx 14rpx; box-sizing: border-box; color: #204fa3; font-size: 25rpx; line-height: 1.6; }
+.fixed-cell { background: #f1f5f9; }
+.fixed-value { display: block; padding: 16rpx 12rpx; text-align: center; line-height: 1.6; }
+.computed-cell { background: #f9fbff; }
+.computed-value { color: #64748b; text-align: center; padding: 16rpx 8rpx; }
+.input-error, .cell-error { background: #fff0ee; }
+.cell-message { padding: 0 10rpx 12rpx; color: #b42318; font-size: 22rpx; text-align: center; line-height: 1.5; }
+.mode-list { display: flex; flex-wrap: wrap; gap: 20rpx; }
+.mode-option { display: flex; align-items: center; font-size: 26rpx; padding: 12rpx 0; }
+.mode-option radio { transform: scale(0.85); }
+.success { display: block; color: #137244; font-size: 25rpx; line-height: 1.7; }
+.secondary { background: #edf3ff; color: #204fa3; margin-top: 18rpx; }
+.reset { background: transparent; color: #64748b; margin-top: 18rpx; }

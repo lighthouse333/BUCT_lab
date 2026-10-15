@@ -1,0 +1,74 @@
+<view class="page">
+  <view wx:if="{{loadError}}" class="card">
+    <text class="error">{{loadError}}</text>
+    <button class="primary" bindtap="onGoBack">返回实验选择</button>
+  </view>
+  <block wx:elif="{{experiment}}">
+    <text class="eyebrow">BUCT LAB · {{experiment.category}}</text>
+    <text class="title">{{experiment.name}}</text>
+    <text class="subtitle">{{note}}</text>
+
+    <view class="card">
+      <text class="section-title">实验信息（选填）</text>
+      <view class="info-grid">
+        <label wx:for="{{info}}" wx:key="key">{{item.label}}<input value="{{item.value}}" data-index="{{index}}" bindinput="onInfoInput" placeholder="填写{{item.label}}" maxlength="80" aria-label="{{item.label}}" /></label>
+      </view>
+    </view>
+
+    <view wx:if="{{parameters.length}}" class="card">
+      <text class="section-title">实验参数</text>
+      <text class="hint">模板预填值可修改，请核对实际仪器。数值支持负号、小数和科学计数法，例如 -1.20、2.25e-3。</text>
+      <label wx:for="{{parameters}}" wx:key="key" class="full-label" id="{{item.id}}">{{item.label}}{{item.optional ? '（选填）' : ''}}
+        <input class="{{item.error ? 'input-error' : ''}}" value="{{item.value}}" data-index="{{index}}" bindinput="onParameterInput" bindblur="onParameterBlur" placeholder="{{item.placeholder || '按实际实验填写'}}" maxlength="{{item.kind === 'text' ? 200 : 40}}" aria-label="{{item.label}}" />
+        <text wx:if="{{item.error}}" class="error">{{item.error}}</text>
+      </label>
+    </view>
+
+    <view wx:if="{{modes.length}}" class="card">
+      <text class="section-title">圆环记录方案</text>
+      <radio-group class="mode-list" bindchange="onModeChange">
+        <label wx:for="{{modes}}" wx:key="id" class="mode-option"><radio value="{{item.id}}" checked="{{mode === item.id}}" color="#204fa3" />{{item.label}}</label>
+      </radio-group>
+      <text class="hint">综合、π、σ 方案选一；σ 方案同时填写加场和无场两张表。</text>
+    </view>
+
+    <view class="notice">左右滑动表格查看全部列。蓝色格填写原始读数，灰色格为固定项目，“待计算”列由后续数据处理生成。</view>
+    <block wx:for="{{tables}}" wx:for-item="table" wx:for-index="tableIndex" wx:key="id">
+      <view wx:if="{{table.visible}}" class="card table-card">
+        <text class="section-title">表 {{tableIndex + 1}} · {{table.title}}</text>
+        <text wx:if="{{table.hint}}" class="hint">{{table.hint}}</text>
+        <scroll-view scroll-x class="table-scroll" scroll-into-view="{{table.scrollTarget}}" scroll-with-animation>
+          <view class="table" style="width: {{table.width}}rpx;">
+            <view class="tr header">
+              <view wx:for="{{table.columns}}" wx:for-item="column" wx:key="key" class="cell heading-cell" style="width: {{column.width}}rpx;">{{column.label}}{{column.kind === 'computed' ? '（处理列）' : ''}}</view>
+            </view>
+            <view wx:for="{{table.rows}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="id" class="tr">
+              <view wx:for="{{row.cells}}" wx:for-item="cell" wx:for-index="columnIndex" wx:key="key" id="{{cell.id}}" class="cell {{cell.kind === 'fixed' ? 'fixed-cell' : ''}} {{cell.kind === 'computed' ? 'computed-cell' : ''}} {{cell.error ? 'cell-error' : ''}}" style="width: {{cell.width}}rpx;">
+                <text wx:if="{{cell.kind === 'fixed'}}" class="fixed-value">{{cell.value}}</text>
+                <text wx:elif="{{cell.kind === 'computed'}}" class="computed-value">待计算</text>
+                <block wx:else>
+                  <textarea wx:if="{{cell.kind === 'text'}}" value="{{cell.value}}" data-table="{{tableIndex}}" data-row="{{rowIndex}}" data-column="{{columnIndex}}" bindinput="onCellInput" bindblur="onCellBlur" placeholder="选填文字记录" maxlength="500" auto-height aria-label="{{table.title}}第{{rowIndex + 1}}行{{cell.label}}" />
+                  <input wx:else value="{{cell.value}}" data-table="{{tableIndex}}" data-row="{{rowIndex}}" data-column="{{columnIndex}}" bindinput="onCellInput" bindblur="onCellBlur" placeholder="{{cell.optional ? '选填' : '请输入'}}" maxlength="40" aria-label="{{table.title}}第{{rowIndex + 1}}行{{cell.label}}" />
+                  <text wx:if="{{cell.error}}" class="cell-message">{{cell.error}}</text>
+                </block>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+        <view wx:if="{{table.adjustable}}" class="actions">
+          <button data-table="{{tableIndex}}" bindtap="onAddRow" disabled="{{table.rows.length >= 60}}">增加测量行</button>
+          <button data-table="{{tableIndex}}" bindtap="onRemoveRow" disabled="{{table.rows.length <= 1}}">删除最后一行</button>
+        </view>
+      </view>
+    </block>
+
+    <view class="card">
+      <text class="section-title">核对原始数据</text>
+      <text wx:if="{{message}}" class="{{errorCount ? 'error' : 'success'}}">{{message}}</text>
+      <text class="hint">本页先完成数据录入与格式检查，实验计算、图表和文件导出尚未接入。离开后数据不保留，请先复制需要的记录。</text>
+      <button class="primary" bindtap="onCheck">检查输入</button>
+      <button class="secondary" bindtap="onCopy">复制原始数据</button>
+      <button class="reset" bindtap="onReset">恢复空白模板</button>
+    </view>
+  </block>
+</view>
