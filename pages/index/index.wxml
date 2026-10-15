@@ -48,6 +48,6 @@
       <button wx:if="{{selectedExperiment}}" class="text-button" bindtap="onClearSelection">取消选择</button>
     </view>
     <button class="confirm-button" disabled="{{!selectedExperiment}}" bindtap="onConfirmSelection">确认选择</button>
-    <text class="development-note">光谱定性分析已开放，其他实验陆续接入</text>
+    <text class="development-note">01—06、PN结已开放数据录入；光谱定性分析可直接计算</text>
   </view>
 </view>

@@ -84,7 +84,7 @@ test('页面统计完整组；半填阻止汇总，修改后立即更新、清�
   page.recalculate(); assert.equal(page.data.result, null)
 })
 
-test('首页只将光谱实验接入新路由', () => {
+test('首页保留光谱路由，新增表格路由，其他实验仍显示待开放', () => {
   let definition, navigated, modal
   global.Page = value => { definition = value }
   global.wx = { navigateTo: value => { navigated = value.url }, showModal: value => { modal = value } }
@@ -92,6 +92,8 @@ test('首页只将光谱实验接入新路由', () => {
   definition.onConfirmSelection.call({ data: { selectedExperiment: { id: 'spectral-analysis' } } })
   assert.equal(navigated, '/pages/spectral-analysis/index')
   definition.onConfirmSelection.call({ data: { selectedExperiment: { id: 'rlc', name: 'RLC' } } })
+  assert.equal(navigated, '/pages/experiment-input/index?id=rlc')
+  definition.onConfirmSelection.call({ data: { selectedExperiment: { id: 'hall-effect', name: '霍尔效应' } } })
   assert.ok(modal)
   delete global.Page; delete global.wx
 })

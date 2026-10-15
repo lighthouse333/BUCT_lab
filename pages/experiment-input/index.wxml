@@ -1,0 +1,87 @@
+<view wx:if="{{form}}" class="page input-page">
+  <text class="eyebrow">BUCT LAB · {{form.category}} · {{form.number}}</text>
+  <text class="title">{{form.name}}</text>
+  <text class="subtitle">{{form.subtitle}}</text>
+
+  <view class="record-guide">
+    <text>蓝色格填写读数 · 灰色格自动整理</text>
+    <text class="hint">{{form.hint}}</text>
+    <text class="hint">表格每行是一组测量，左右滑动查看全部列。支持负数与科学计数法，空白不会当作 0。</text>
+  </view>
+
+  <view id="personal" class="card">
+    <text class="section-title">实验信息</text>
+    <view class="info-grid">
+      <label>班级 *<input value="{{form.personal.studentClass}}" data-key="studentClass" bindinput="onInfoInput" placeholder="填写班级" maxlength="80" /></label>
+      <label>姓名 *<input value="{{form.personal.studentName}}" data-key="studentName" bindinput="onInfoInput" placeholder="填写姓名" maxlength="80" /></label>
+      <label>学号 *<input value="{{form.personal.studentId}}" data-key="studentId" bindinput="onInfoInput" placeholder="填写学号" maxlength="80" /></label>
+      <label>任课教师<input value="{{form.personal.teacher}}" data-key="teacher" bindinput="onInfoInput" placeholder="填写教师（可选）" maxlength="80" /></label>
+      <view class="date-field"><text>实验日期</text><picker mode="date" value="{{form.personal.experimentDate}}" bindchange="onDateChange"><view class="date-value {{form.personal.experimentDate ? '' : 'placeholder'}}">{{form.personal.experimentDate || '选择实际实验日期'}}</view></picker></view>
+      <label>同组人<input value="{{form.personal.partners}}" data-key="partners" bindinput="onInfoInput" placeholder="填写同组人（可选）" maxlength="150" /></label>
+    </view>
+    <text class="hint">* 为复制完整数据前的必填项；信息和读数均可先保存为草稿。</text>
+  </view>
+
+  <view id="parameters" class="card">
+    <text class="section-title">仪器与实验参数</text>
+    <text class="hint">预填值来自记录模板，可按实际仪器修改。未注明的仪器参数留待本人填写。</text>
+    <view class="parameter-grid">
+      <label wx:for="{{form.parameters}}" wx:key="key" wx:for-item="parameter" wx:for-index="parameterIndex" class="parameter-field">
+        <text>{{parameter.label}}<text wx:if="{{parameter.unit}}">（{{parameter.unit}}）</text></text>
+        <input class="{{parameter.error ? (showErrors || parameter.value ? 'invalid-input' : '') : ''}}" type="text" value="{{parameter.value}}" data-index="{{parameterIndex}}" bindinput="onParameterInput" placeholder="{{parameter.optional ? '选填' : '按实际仪器填写'}}" maxlength="{{parameter.inputType === 'text' ? 150 : 64}}" aria-label="{{parameter.label}}，单位{{parameter.unit}}" />
+        <text wx:if="{{parameter.error ? (showErrors || parameter.value) : false}}" class="cell-error">{{parameter.error}}</text>
+      </label>
+    </view>
+  </view>
+
+  <view wx:for="{{form.tables}}" wx:key="id" wx:for-item="table" wx:for-index="tableIndex" id="table-{{table.id}}" class="card table-card">
+    <view class="table-heading"><text class="section-title">{{table.title}}</text><text class="table-badge">{{table.derived ? '自动整理' : table.rows.length + ' 行'}}</text></view>
+    <text wx:if="{{table.hint}}" class="hint">{{table.hint}}</text>
+    <scroll-view class="table-scroll" scroll-x enhanced show-scrollbar="{{true}}">
+      <view class="table record-table" style="width: {{table.width}}rpx;">
+        <view class="tr header">
+          <view class="row-index column-header">序号</view>
+          <view wx:for="{{table.columns}}" wx:key="key" wx:for-item="column" class="record-cell column-header {{column.computed || table.derived ? 'computed-header' : ''}}">
+            <text>{{column.label}}</text><text class="unit">{{column.unit || '—'}}</text>
+          </view>
+        </view>
+        <view wx:for="{{table.rows}}" wx:key="id" wx:for-item="row" wx:for-index="rowIndex" class="tr">
+          <view class="row-index">{{rowIndex + 1}}</view>
+          <view wx:for="{{row.cells}}" wx:key="key" wx:for-item="cell" wx:for-index="columnIndex" class="record-cell {{cell.editable ? 'editable-cell' : 'computed-cell'}} {{cell.error ? (showErrors || cell.value || cell.computed ? 'cell-invalid' : '') : ''}}">
+            <input wx:if="{{cell.editable}}" type="text" value="{{cell.value}}" data-table="{{tableIndex}}" data-row="{{rowIndex}}" data-column="{{columnIndex}}" bindinput="onCellInput" placeholder="{{cell.placeholder}}" maxlength="{{cell.inputType === 'text' ? 150 : 64}}" aria-label="{{table.title}}第{{rowIndex + 1}}行{{cell.label}}，单位{{cell.unit}}" />
+            <text wx:else class="computed-value">{{cell.computed ? cell.display : (cell.value || '—')}}</text>
+            <text wx:if="{{cell.error ? (showErrors || cell.value || cell.computed) : false}}" class="cell-error">{{cell.error}}</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+    <view wx:if="{{!table.derived}}" class="actions">
+      <button data-table="{{tableIndex}}" bindtap="onAddRow" disabled="{{table.rows.length + table.addStep > table.maxRows}}">＋ 增加{{table.addStep}}行</button>
+      <button data-table="{{tableIndex}}" bindtap="onRemoveRow" disabled="{{table.minRows > table.rows.length - table.addStep}}">删除末尾{{table.addStep}}行</button>
+    </view>
+    <text wx:if="{{!table.derived}}" class="hint">已完整填写 {{table.completedRows}} / {{table.rows.length}} 行</text>
+    <view wx:for="{{table.summaries}}" wx:key="key" wx:for-item="summary" class="metric"><text>{{summary.label}}</text><text>{{summary.display}} {{summary.unit}}</text></view>
+  </view>
+
+  <view class="card">
+    <text class="section-title">实验补充记录（可选）</text>
+    <label class="full-label">实际操作步骤<textarea value="{{form.notes.actualSteps}}" data-key="actualSteps" bindinput="onNoteInput" placeholder="按本次实际操作记录，供后续生成报告使用" maxlength="2000" auto-height /></label>
+    <label class="full-label">观察到的现象<textarea value="{{form.notes.observations}}" data-key="observations" bindinput="onNoteInput" placeholder="记录实际观察到的现象" maxlength="2000" auto-height /></label>
+    <label class="full-label">本人补充的误差讨论<textarea value="{{form.notes.errorNotes}}" data-key="errorNotes" bindinput="onNoteInput" placeholder="可记录测量中遇到的情况，不确定的原因可标注为待核查" maxlength="2000" auto-height /></label>
+  </view>
+
+  <view wx:if="{{showErrors ? validationErrors.length : false}}" class="card validation-card">
+    <text class="section-title">还有 {{validationErrors.length}} 项需要核对</text>
+    <block wx:for="{{validationErrors}}" wx:key="id"><text wx:if="{{8 > index}}" class="error">{{item.message}}</text></block>
+    <text wx:if="{{validationErrors.length > 8}}" class="hint">请结合各表格中的提示继续补齐，其余问题会随填写更新。</text>
+  </view>
+  <view class="card export-card">
+    <text class="section-title">保存与交接</text>
+    <text class="hint">已填写 {{form.progress.filled}} / {{form.progress.total}} 个必填数据格，原始字符串和单位会一起保留。</text>
+    <view class="actions"><button bindtap="onSaveDraft">{{saved ? '草稿已保存' : '保存本机草稿'}}</button><button class="clear-button" bindtap="onClear">清空本实验</button></view>
+    <button class="primary" bindtap="onCopyData">检查并复制数据 JSON</button>
+    <text wx:if="{{status}}" class="status-text" role="status">{{status}}</text>
+    <text class="hint">草稿仅存在当前设备。离开页面时会尝试保存，请在关闭应用前手动保存。此页负责数据收集与基础整理，完整分析和报告由后续处理模块完成。</text>
+  </view>
+</view>
+<view wx:else class="page"><view class="card error">{{loadError || '正在加载实验记录表…'}}</view></view>

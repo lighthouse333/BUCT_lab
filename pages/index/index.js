@@ -1,4 +1,5 @@
 const { experiments, categories } = require('../../utils/experiments.js')
+const { supportedIds } = require('../../utils/experiment-input-config')
 
 Page({
   data: {
@@ -57,6 +58,10 @@ Page({
     }
     if (experiment.id === 'spectral-analysis') {
       wx.navigateTo({ url: '/pages/spectral-analysis/index' })
+      return
+    }
+    if (supportedIds.includes(experiment.id)) {
+      wx.navigateTo({ url: `/pages/experiment-input/index?id=${experiment.id}` })
       return
     }
     wx.showModal({
