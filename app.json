@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/spectral-analysis/index",
     "pages/logs/logs"
   ],
   "window": {

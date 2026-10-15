@@ -55,6 +55,10 @@ Page({
       wx.showToast({ title: '请先选择一个实验', icon: 'none' })
       return
     }
+    if (experiment.id === 'spectral-analysis') {
+      wx.navigateTo({ url: '/pages/spectral-analysis/index' })
+      return
+    }
     wx.showModal({
       title: '已选择实验',
       content: experiment.name + '\n\n该实验的数据输入页尚未开放，后续将在这里进入填写。',
