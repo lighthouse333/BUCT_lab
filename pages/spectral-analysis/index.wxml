@@ -1,0 +1,88 @@
+<view class="page">
+  <text class="eyebrow">BUCT LAB · 光学</text>
+  <text class="title">光谱定性分析</text>
+  <text class="subtitle">记录同一谱线的 ±1 级位置，自动计算衍射角与测量统计量。</text>
+
+  <view class="card">
+    <text class="section-title">实验信息</text>
+    <view class="info-grid">
+      <label>班级<input value="{{studentClass}}" data-key="studentClass" bindinput="onInfoInput" placeholder="填写班级" /></label>
+      <label>姓名<input value="{{studentName}}" data-key="studentName" bindinput="onInfoInput" placeholder="填写姓名" /></label>
+      <label>学号<input value="{{studentId}}" data-key="studentId" bindinput="onInfoInput" placeholder="填写学号" /></label>
+      <label>任课教师<input value="{{teacher}}" data-key="teacher" bindinput="onInfoInput" placeholder="填写教师" /></label>
+    </view>
+    <label class="full-label">谱线名称 / 颜色<input value="{{lineName}}" data-key="lineName" bindinput="onInfoInput" placeholder="例如：待测光源的黄色谱线" /></label>
+  </view>
+
+  <view class="card table-card">
+    <text class="section-title">表 1 · 数据记录表</text>
+    <text class="hint">I、II、III 为同一谱线的重复测量。左右滑动表格填写；蓝色为输入格。</text>
+    <text class="hint">输入示例：12:30 表示 12°30′；12.5 表示 12.5°。跨越 0° 自动处理，夹角取小于180°的一侧。</text>
+    <scroll-view scroll-x class="table-scroll">
+      <view class="table" style="width: {{tableWidth}}rpx;">
+        <view class="tr header">
+          <view class="row-label">测量次数 / 游标</view>
+          <view wx:for="{{groups}}" wx:key="id" class="group-head">
+            <view class="group-name">{{item.label}}</view>
+            <view class="sub-head"><text>左游标读数</text><text>右游标读数</text></view>
+          </view>
+        </view>
+        <view class="tr">
+          <view class="row-label">“−1”级谱线的位置</view>
+          <view wx:for="{{groups}}" wx:key="id" class="pair">
+            <input value="{{item.minusLeft}}" data-index="{{index}}" data-field="minusLeft" bindinput="onReadingInput" placeholder="度:分" maxlength="24" aria-label="{{item.label}}组负一级左游标" />
+            <input value="{{item.minusRight}}" data-index="{{index}}" data-field="minusRight" bindinput="onReadingInput" placeholder="度:分" maxlength="24" aria-label="{{item.label}}组负一级右游标" />
+          </view>
+        </view>
+        <view class="tr">
+          <view class="row-label">“+1”级谱线的位置</view>
+          <view wx:for="{{groups}}" wx:key="id" class="pair">
+            <input value="{{item.plusLeft}}" data-index="{{index}}" data-field="plusLeft" bindinput="onReadingInput" placeholder="度:分" maxlength="24" aria-label="{{item.label}}组正一级左游标" />
+            <input value="{{item.plusRight}}" data-index="{{index}}" data-field="plusRight" bindinput="onReadingInput" placeholder="度:分" maxlength="24" aria-label="{{item.label}}组正一级右游标" />
+          </view>
+        </view>
+        <view class="tr computed"><view class="row-label">两谱线夹角 2θ</view><view wx:for="{{rows}}" wx:key="id" class="pair"><text>{{item.left}}</text><text>{{item.right}}</text></view></view>
+        <view class="tr computed"><view class="row-label">消除偏心差的 2θ̄</view><view wx:for="{{rows}}" wx:key="id" class="merged">{{item.corrected}}</view></view>
+        <view class="tr computed"><view class="row-label">θ̄（本组衍射角）</view><view wx:for="{{rows}}" wx:key="id" class="merged">{{item.theta}}</view></view>
+      </view>
+    </scroll-view>
+    <view class="actions"><button bindtap="onAddGroup" disabled="{{groups.length >= 30}}">＋ 增加测量组</button><button bindtap="onRemoveGroup" disabled="{{groups.length <= 1}}">删除最后一组</button></view>
+    <block wx:for="{{rows}}" wx:key="id"><text wx:if="{{item.error}}" class="error">{{item.label}}：{{item.error}}</text><text wx:if="{{item.warning}}" class="warning">{{item.label}}：{{item.warning}}</text></block>
+  </view>
+
+  <view class="card">
+    <text class="section-title">波长计算参数</text>
+    <label class="full-label">光栅刻线密度（条/mm）<input type="digit" value="{{density}}" data-key="density" bindinput="onInfoInput" placeholder="按仪器填写；留空则仅计算角度" /></label>
+    <label class="full-label">参考波长（nm，可选）<input type="digit" value="{{reference}}" data-key="reference" bindinput="onInfoInput" placeholder="用于计算相对误差" /></label>
+    <text wx:if="{{parameterError}}" class="error">{{parameterError}}</text>
+  </view>
+
+  <text wx:if="{{message}}" class="notice">{{message}}</text>
+  <view wx:if="{{result}}" class="card results">
+    <text class="section-title">计算结果</text>
+    <text class="hint">n={{result.n}} 个完整测量组 · p=0.683 · tₚ={{result.tp}}</text>
+    <view class="metric"><text>平均衍射角</text><text>{{result.mean}}</text></view>
+    <view class="metric"><text>平均衍射角（十进制度）</text><text>{{result.meanDegrees}} °</text></view>
+    <view class="metric"><text>实验方差 s²（分母 n−1）</text><text>{{result.variance}} °²</text></view>
+    <view class="metric"><text>实验标准差 s</text><text>{{result.sd}} °</text></view>
+    <view class="metric"><text>均值标准差 s / √n</text><text>{{result.sem}} °</text></view>
+    <view class="metric"><text>A 类不确定度 uA(θ)</text><text>{{result.ua}} °</text></view>
+    <view class="metric"><text>波长 λ（由平均角计算）</text><text>{{result.wavelength}} nm</text></view>
+    <view class="metric"><text>波长不确定度（仅 A 类）</text><text>{{result.wavelengthUA}} nm</text></view>
+    <view class="metric"><text>相对参考波长的误差</text><text>{{result.relativeError}} %</text></view>
+    <text class="hint">未计入仪器和光栅常数不确定度，不能将仅 A 类结果当作总不确定度。显示保留最多8位有效数字供核对，报告最终修约另行处理。</text>
+    <button class="primary" bindtap="onCopy" disabled="{{!!parameterError}}">复制原始数据与计算结果</button>
+  </view>
+  <view wx:else class="card hint">填入至少一组完整数据后显示计算结果；全空组不计入 n，半填组需补齐或清空。</view>
+
+  <view class="card formulas">
+    <text class="section-title">计算依据</text>
+    <text>每组：2θ̄ = (2θ左 + 2θ右) / 2；θ̄ = (2θ左 + 2θ右) / 4。</text>
+    <text>统计对象为各完整组的衍射角 θᵢ，不把左右游标当成两次独立重复测量。</text>
+    <text>s² = Σ(θᵢ − θ均值)² / (n − 1)</text>
+    <text>s均值 = s / √n；uA = tₚ × s均值，p=0.683。</text>
+    <text>一级衍射：λ = d sin(θ均值)，d = 10⁶ / 刻线密度（nm）。</text>
+    <text>tₚ 来源：谢超然《大学物理实验》(2015)，表1.1.2。未列出的 n 不自动插值。</text>
+    <text>当前页面的数据在离开后不保留，请及时复制。</text>
+  </view>
+</view>

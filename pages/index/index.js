@@ -1,4 +1,5 @@
 const { experiments, categories } = require('../../utils/experiments.js')
+const { definitions } = require('../../utils/experiment-forms.js')
 
 Page({
   data: {
@@ -53,6 +54,14 @@ Page({
     const experiment = this.data.selectedExperiment
     if (!experiment) {
       wx.showToast({ title: '请先选择一个实验', icon: 'none' })
+      return
+    }
+    if (experiment.id === 'spectral-analysis') {
+      wx.navigateTo({ url: '/pages/spectral-analysis/index' })
+      return
+    }
+    if (definitions[experiment.id]) {
+      wx.navigateTo({ url: '/pages/experiment-input/index?id=' + encodeURIComponent(experiment.id) })
       return
     }
     wx.showModal({

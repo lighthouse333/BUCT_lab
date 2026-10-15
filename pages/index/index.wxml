@@ -48,6 +48,6 @@
       <button wx:if="{{selectedExperiment}}" class="text-button" bindtap="onClearSelection">取消选择</button>
     </view>
     <button class="confirm-button" disabled="{{!selectedExperiment}}" bindtap="onConfirmSelection">确认选择</button>
-    <text class="development-note">实验数据输入页尚未开放</text>
+    <text class="development-note">光谱分析及另 6 项实验已开放录入，其他实验陆续接入</text>
   </view>
 </view>
