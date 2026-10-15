@@ -1,0 +1,39 @@
+page { background: #f4f6fa; color: #1e293b; }
+.page { padding: 32rpx 24rpx calc(40rpx + env(safe-area-inset-bottom)); }
+.eyebrow { color: #204fa3; font-size: 22rpx; letter-spacing: 3rpx; }
+.title { display: block; margin: 12rpx 0; font-size: 42rpx; font-weight: 700; }
+.subtitle { display: block; font-size: 26rpx; color: #64748b; line-height: 1.7; margin-bottom: 28rpx; }
+.card { background: #fff; border: 1rpx solid #dce3ed; border-radius: 20rpx; padding: 24rpx; margin-bottom: 24rpx; }
+.section-title { display: block; font-size: 30rpx; font-weight: 600; margin-bottom: 18rpx; }
+.hint { display: block; font-size: 24rpx; line-height: 1.7; color: #64748b; margin: 12rpx 0; }
+.info-grid { display: flex; flex-wrap: wrap; gap: 20rpx; }
+.info-grid label { width: calc(50% - 10rpx); font-size: 25rpx; }
+label input { margin-top: 10rpx; background: #f4f7fb; border-radius: 8rpx; height: 76rpx; padding: 0 14rpx; font-size: 25rpx; }
+.full-label { display: block; margin: 20rpx 0 8rpx; font-size: 25rpx; }
+.table-scroll { margin: 22rpx 0; width: 100%; }
+.table { border-left: 2rpx solid #64748b; border-top: 2rpx solid #64748b; box-sizing: border-box; font-size: 24rpx; }
+.tr { display: flex; }
+.row-label, .group-head, .pair, .merged { flex-shrink: 0; box-sizing: border-box; border-right: 2rpx solid #64748b; border-bottom: 2rpx solid #64748b; }
+.row-label { width: 250rpx; padding: 16rpx; display: flex; align-items: center; background: #f1f5f9; }
+.group-head, .pair, .merged { width: 300rpx; }
+.group-name { text-align: center; padding: 16rpx; border-bottom: 1rpx solid #94a3b8; font-weight: 600; }
+.sub-head, .pair { display: flex; }
+.sub-head text { width: 50%; text-align: center; padding: 14rpx 0; }
+.sub-head text + text, .pair input + input, .pair text + text { border-left: 1rpx solid #94a3b8; }
+.pair input { width: 50%; min-width: 0; height: 92rpx; text-align: center; background: #eef4ff; color: #204fa3; font-size: 25rpx; box-sizing: border-box; }
+.pair text { width: 50%; min-height: 82rpx; display: flex; align-items: center; justify-content: center; text-align: center; padding: 8rpx; box-sizing: border-box; overflow-wrap: break-word; }
+.merged { display: flex; align-items: center; justify-content: center; min-height: 82rpx; padding: 10rpx; }
+.computed { background: #f9fbff; }
+.actions { display: flex; gap: 16rpx; }
+button { font-size: 24rpx; line-height: 1.5; padding: 18rpx; border-radius: 12rpx; }
+button::after { border: 0; }
+.actions button { flex: 1; margin: 0; background: #edf3ff; color: #204fa3; }
+button[disabled] { background: #e2e8f0; color: #8995a7; }
+.error, .warning, .notice { display: block; font-size: 24rpx; line-height: 1.7; margin: 12rpx 0; }
+.error { color: #b42318; }
+.warning { color: #8a5b13; }
+.notice { background: #fff3da; padding: 20rpx; border-radius: 12rpx; }
+.metric { display: flex; justify-content: space-between; gap: 20rpx; padding: 20rpx 0; border-bottom: 1rpx solid #e8edf5; font-size: 25rpx; line-height: 1.6; }
+.metric text:last-child { text-align: right; color: #204fa3; overflow-wrap: anywhere; }
+.primary { background: #204fa3; color: white; margin-top: 24rpx; }
+.formulas > text:not(.section-title) { display: block; color: #64748b; font-size: 23rpx; line-height: 1.8; margin-top: 12rpx; }

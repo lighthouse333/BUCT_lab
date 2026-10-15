@@ -1,49 +1,69 @@
-// index.js
-const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+const { experiments, categories } = require('../../utils/experiments.js')
 
 Page({
   data: {
-    motto: '欢迎使用百花实验数据处理平台',
-    userInfo: {
-      avatarUrl: defaultAvatarUrl,
-      nickName: '',
-    },
-    hasUserInfo: false,
-    canIUseGetUserProfile: wx.canIUse('getUserProfile'),
-    canIUseNicknameComp: wx.canIUse('input.type.nickname'),
+    keyword: '',
+    categories,
+    activeCategory: '全部',
+    experiments,
+    filteredExperiments: experiments,
+    selectedId: '',
+    selectedExperiment: null,
   },
-  bindViewTap() {
-    wx.navigateTo({
-      url: '../logs/logs'
+
+  onSearchInput(e) {
+    this.updateFilter(e.detail.value, this.data.activeCategory)
+  },
+
+  onClearSearch() {
+    this.updateFilter('', this.data.activeCategory)
+  },
+
+  onCategoryChange(e) {
+    const category = e.currentTarget.dataset.category
+    if (categories.indexOf(category) === -1) return
+    this.updateFilter(this.data.keyword, category)
+  },
+
+  updateFilter(keyword, activeCategory) {
+    const query = keyword.trim().toLowerCase()
+    const filteredExperiments = experiments.filter(experiment => {
+      const matchesCategory = activeCategory === '全部' || experiment.category === activeCategory
+      const matchesKeyword = (experiment.name + ' ' + experiment.keywords).toLowerCase().includes(query)
+      return matchesCategory && matchesKeyword
     })
+    this.setData({ keyword, activeCategory, filteredExperiments })
   },
-  onChooseAvatar(e) {
-    const { avatarUrl } = e.detail
-    const { nickName } = this.data.userInfo
-    this.setData({
-      "userInfo.avatarUrl": avatarUrl,
-      hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-    })
+
+  onResetFilter() {
+    this.updateFilter('', '全部')
   },
-  onInputChange(e) {
-    const nickName = e.detail.value
-    const { avatarUrl } = this.data.userInfo
-    this.setData({
-      "userInfo.nickName": nickName,
-      hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-    })
+
+  onExperimentChange(e) {
+    const selectedExperiment = experiments.find(experiment => experiment.id === e.detail.value)
+    if (!selectedExperiment) return
+    this.setData({ selectedId: selectedExperiment.id, selectedExperiment })
   },
-  getUserProfile(e) {
-    // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-    wx.getUserProfile({
-      desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-      success: (res) => {
-        console.log(res)
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
-      }
+
+  onClearSelection() {
+    this.setData({ selectedId: '', selectedExperiment: null })
+  },
+
+  onConfirmSelection() {
+    const experiment = this.data.selectedExperiment
+    if (!experiment) {
+      wx.showToast({ title: '请先选择一个实验', icon: 'none' })
+      return
+    }
+    if (experiment.id === 'spectral-analysis') {
+      wx.navigateTo({ url: '/pages/spectral-analysis/index' })
+      return
+    }
+    wx.showModal({
+      title: '已选择实验',
+      content: experiment.name + '\n\n该实验的数据输入页尚未开放，后续将在这里进入填写。',
+      showCancel: false,
+      confirmText: '知道了',
     })
   },
 })

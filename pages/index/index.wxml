@@ -1,27 +1,53 @@
-<!--index.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
-        </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
-    </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
-    </view>
+<view class="selection-page">
+  <view class="page-header">
+    <text class="eyebrow">BUCT LAB</text>
+    <text class="page-title">大学物理实验数据处理</text>
+    <text class="page-description">选择本次实验，开始整理测量数据</text>
   </view>
-</scroll-view>
+
+  <view class="search-box">
+    <input class="search-input" value="{{keyword}}" placeholder="搜索实验名称，如迈克尔孙、RLC" maxlength="60" confirm-type="search" bindinput="onSearchInput" aria-label="搜索实验名称" />
+    <button wx:if="{{keyword}}" class="text-button search-clear" bindtap="onClearSearch">清空</button>
+  </view>
+
+  <scroll-view class="category-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="category-list">
+      <button wx:for="{{categories}}" wx:key="*this" class="category-button {{activeCategory === item ? 'category-active' : ''}}" data-category="{{item}}" bindtap="onCategoryChange" aria-label="{{item}}分类{{activeCategory === item ? '，当前已选' : ''}}">{{item}}</button>
+    </view>
+  </scroll-view>
+
+  <view class="list-heading">
+    <text class="list-title">选择实验名称</text>
+    <text class="result-count">{{filteredExperiments.length}} / {{experiments.length}} 个实验</text>
+  </view>
+
+  <radio-group class="experiment-list" bindchange="onExperimentChange">
+    <label wx:for="{{filteredExperiments}}" wx:key="id" class="experiment-card {{selectedId === item.id ? 'experiment-selected' : ''}}">
+      <text class="experiment-number">{{item.number}}</text>
+      <view class="experiment-info">
+        <text class="experiment-name">{{item.name}}</text>
+        <text class="experiment-meta">{{item.category}} · {{item.tableCount}} 张数据表</text>
+      </view>
+      <radio class="experiment-radio" value="{{item.id}}" checked="{{selectedId === item.id}}" color="#204fa3" aria-label="{{item.name}}" />
+    </label>
+  </radio-group>
+
+  <view wx:if="{{!filteredExperiments.length}}" class="empty-state">
+    <text class="empty-title">没有找到匹配的实验</text>
+    <text class="empty-description">试试缩短关键词，或查看全部分类</text>
+    <button class="reset-button" bindtap="onResetFilter">显示全部实验</button>
+  </view>
+
+  <view class="selection-footer">
+    <view class="selection-summary">
+      <view class="selection-copy">
+        <text class="selection-label">{{selectedExperiment ? '已选择' : '尚未选择实验'}}</text>
+        <text wx:if="{{selectedExperiment}}" class="selection-name">{{selectedExperiment.name}}</text>
+        <text wx:else class="selection-hint">请在列表中选择一项实验</text>
+      </view>
+      <button wx:if="{{selectedExperiment}}" class="text-button" bindtap="onClearSelection">取消选择</button>
+    </view>
+    <button class="confirm-button" disabled="{{!selectedExperiment}}" bindtap="onConfirmSelection">确认选择</button>
+    <text class="development-note">光谱定性分析已开放，其他实验陆续接入</text>
+  </view>
+</view>
