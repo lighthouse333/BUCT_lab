@@ -7,7 +7,7 @@ const { createRequire } = require('node:module')
 const { definitions } = require('../utils/experiment-forms')
 const { createForm, validateField, validateForm, collectInput, formatInput } = require('../utils/experiment-input')
 
-const ids = ['hall-effect', 'sound-speed', 'strain-sensor', 'fresnel-biprism', 'zeeman-effect', 'michelson']
+const ids = ['hall-effect', 'sound-speed', 'strain-sensor', 'fresnel-biprism', 'zeeman-effect', 'michelson', 'polarization', 'single-slit']
 
 function pageHarness(id, source = 'pages/experiment-input/index.js') {
   const filename = path.resolve(__dirname, '..', source)
@@ -44,13 +44,14 @@ const cellEvent = (table, row, column, value) => ({ currentTarget: { dataset: { 
 function fillRequired(form) {
   form.parameters.forEach(field => { if (!field.optional && !field.value) field.value = field.kind === 'text' ? '按实际记录' : '1' })
   form.tables.filter(table => table.visible).forEach(table => table.rows.forEach(row => row.cells.forEach(cell => {
-    if (cell.kind === 'number' && !cell.optional && !cell.value) cell.value = '0'
+    if (cell.kind === 'number' && !cell.optional && !cell.value) cell.value = cell.positive ? '1' : '0'
+    if (cell.kind === 'text' && !cell.optional && !cell.value) cell.value = '实测记录'
   })))
 }
 
-test('六份模板与 Excel 行列数、测量点及预填参数一致', () => {
-  const expectedRows = [[5, 5, 18], [10, 5], [17, 17], [4, 4, 4], [4, 4, 4, 4, 12], [6, 3, 3]]
-  const expectedColumns = [[7, 7, 8], [4, 6], [11, 11], [4, 4, 4], [13, 9, 5, 5, 4], [3, 5, 3]]
+test('八份模板与 Excel 行列数、测量点及预填参数一致', () => {
+  const expectedRows = [[5, 5, 18], [10, 5], [17, 17], [4, 4, 4], [4, 4, 4, 4, 12], [6, 3, 3], [3, 7], [3, 50, 5]]
+  const expectedColumns = [[7, 7, 8], [4, 6], [11, 11], [4, 4, 4], [13, 9, 5, 5, 4], [3, 5, 3], [6, 6], [2, 3, 7]]
   ids.forEach((id, i) => {
     const form = createForm(id)
     assert.deepEqual(form.tables.map(table => table.rows.length), expectedRows[i])
@@ -168,7 +169,7 @@ test('复制与计算输入接口保留字符串精度，处理列不作为用�
   assert.equal(payload.experimentId, 'michelson')
 })
 
-test('首页分别跳转六个模板，保留光谱路由和未接入实验提示；页面注册齐全', () => {
+test('首页分别跳转八个模板，保留光谱路由和未接入实验提示；页面注册齐全', () => {
   const { page, calls } = pageHarness(null, 'pages/index/index.js')
   ids.forEach(id => {
     page.data.selectedExperiment = { id }
@@ -189,5 +190,51 @@ test('首页分别跳转六个模板，保留光谱路由和未接入实验提�
   const wxml = fs.readFileSync(path.resolve(__dirname, '../pages/experiment-input/index.wxml'), 'utf8')
   const { page: inputPage } = pageHarness('michelson')
   for (const match of wxml.matchAll(/bind(?:input|blur|change|tap)="([^"]+)"/g)) assert.equal(typeof inputPage[match[1]], 'function')
-  assert.equal(Object.keys(definitions).length, 6)
+  assert.equal(Object.keys(definitions).length, 8)
+})
+
+test('光的偏振分列名义角和实际角，观察与偏振态不预填；必填文字可记录不适用', () => {
+  const { page, calls } = pageHarness('polarization')
+  const angles = page.data.tables[1].rows
+  assert.deepEqual(angles.map(row => row.cells[0].value), ['0', '15', '30', '45', '60', '75', '90'])
+  assert.ok(angles.every(row => row.cells.slice(1).every(cell => cell.value === '')))
+  assert.deepEqual(page.data.tables[0].rows.map(row => row.cells[0].value), ['起偏', '检偏', '布儒斯特窗'])
+  page.onCellInput(cellEvent(1, 0, 1, '1.200'))
+  page.onCellInput(cellEvent(0, 0, 1, '2明2暗'))
+  page.onCellInput(cellEvent(1, 0, 4, '不适用'))
+  const payload = collectInput(page.data)
+  assert.equal(payload.tables[1].rows[0].nominalAngle, '0')
+  assert.equal(payload.tables[1].rows[0].actualAngle, '1.200')
+  assert.equal(payload.tables[1].rows[0].axes, '不适用')
+  assert.ok(validateForm(page.data).some(error => error.id === 'cell-0-0-2'))
+  fillRequired(page.data)
+  assert.deepEqual(validateForm(page.data), [])
+  page.onCopy()
+  assert.match(calls.clipboard[0], /2明2暗/)
+  assert.match(calls.clipboard[0], /1\.200/)
+})
+
+test('单缝衍射保留三张表与模板参数，扫描可续至200点，处理距离不可编辑', () => {
+  const { page, calls } = pageHarness('single-slit')
+  assert.equal(page.data.parameters[1].value, '0.05')
+  assert.equal(page.data.parameters[2].value, '0.004')
+  assert.equal(page.data.tables[1].rows.length, 50)
+  assert.equal(page.data.tables[1].rows[49].cells[0].value, '50')
+  assert.deepEqual(page.data.tables[2].rows.map(row => row.cells[0].value), ['1', '2', '3', '4', '5'])
+  page.onCellInput(cellEvent(1, 0, 1, '-0.12000'))
+  page.onCellInput(cellEvent(1, 0, 2, '0.000'))
+  page.onCellInput(cellEvent(2, 0, 4, '999'))
+  assert.equal(page.data.tables[2].rows[0].cells[4].value, '')
+  for (let i = 0; i < 151; i++) page.onAddRow({ currentTarget: { dataset: { table: 1 } } })
+  assert.equal(page.data.tables[1].rows.length, 200)
+  assert.equal(page.data.tables[1].rows[199].cells[0].value, '200')
+  assert.equal(page.data.tables[0].maxRows, 60)
+  const payload = collectInput(page.data)
+  assert.equal(payload.tables[1].rows[0].position, '-0.12000')
+  assert.equal(payload.tables[1].rows[0].intensity, '0.000')
+  assert.ok(!('meanDistance' in payload.tables[2].rows[0]))
+  page.onReset()
+  calls.modals.at(-1).success({ confirm: true })
+  assert.equal(page.data.tables[1].rows.length, 50)
+  assert.equal(page.data.tables[1].rows[0].cells[1].value, '')
 })

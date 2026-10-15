@@ -47,7 +47,7 @@
                 <text wx:if="{{cell.kind === 'fixed'}}" class="fixed-value">{{cell.value}}</text>
                 <text wx:elif="{{cell.kind === 'computed'}}" class="computed-value">待计算</text>
                 <block wx:else>
-                  <textarea wx:if="{{cell.kind === 'text'}}" value="{{cell.value}}" data-table="{{tableIndex}}" data-row="{{rowIndex}}" data-column="{{columnIndex}}" bindinput="onCellInput" bindblur="onCellBlur" placeholder="选填文字记录" maxlength="500" auto-height aria-label="{{table.title}}第{{rowIndex + 1}}行{{cell.label}}" />
+                  <textarea wx:if="{{cell.kind === 'text'}}" value="{{cell.value}}" data-table="{{tableIndex}}" data-row="{{rowIndex}}" data-column="{{columnIndex}}" bindinput="onCellInput" bindblur="onCellBlur" placeholder="{{cell.placeholder || (cell.optional ? '选填文字记录' : '填写实际观察')}}" maxlength="500" auto-height aria-label="{{table.title}}第{{rowIndex + 1}}行{{cell.label}}" />
                   <input wx:else value="{{cell.value}}" data-table="{{tableIndex}}" data-row="{{rowIndex}}" data-column="{{columnIndex}}" bindinput="onCellInput" bindblur="onCellBlur" placeholder="{{cell.optional ? '选填' : '请输入'}}" maxlength="40" aria-label="{{table.title}}第{{rowIndex + 1}}行{{cell.label}}" />
                   <text wx:if="{{cell.error}}" class="cell-message">{{cell.error}}</text>
                 </block>
@@ -56,7 +56,7 @@
           </view>
         </scroll-view>
         <view wx:if="{{table.adjustable}}" class="actions">
-          <button data-table="{{tableIndex}}" bindtap="onAddRow" disabled="{{table.rows.length >= 60}}">增加测量行</button>
+          <button data-table="{{tableIndex}}" bindtap="onAddRow" disabled="{{table.rows.length >= table.maxRows}}">增加测量行</button>
           <button data-table="{{tableIndex}}" bindtap="onRemoveRow" disabled="{{table.rows.length <= 1}}">删除最后一行</button>
         </view>
       </view>

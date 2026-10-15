@@ -66,7 +66,7 @@ Page({
   onAddRow(e) {
     const index = Number(e.currentTarget.dataset.table)
     const table = this.data.tables[index]
-    if (!Number.isInteger(index) || !table || !table.visible || !table.adjustable || table.rows.length >= 60) return
+    if (!Number.isInteger(index) || !table || !table.visible || !table.adjustable || table.rows.length >= table.maxRows) return
     const definition = definitions[this.data.experiment.id].tables[index]
     this.setData({ [`tables[${index}].rows`]: table.rows.concat(makeRow(definition, index, table.rows.length)), checked: false, message: '', errorCount: 0 })
   },
