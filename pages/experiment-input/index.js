@@ -1,8 +1,9 @@
 const { definitions } = require('../../utils/experiment-forms')
-const { createForm, makeRow, validateField, validateForm, formatInput } = require('../../utils/experiment-input')
+const { createForm, makeRow, validateField, validateForm, formatInput, deriveParameters } = require('../../utils/experiment-input')
+const { buildTableView } = require('../../utils/table-layout')
 
 Page({
-  data: { experiment: null, loadError: '', parameters: [], tables: [], info: [], modes: [], mode: '', checked: false, message: '', errorCount: 0 },
+  data: { experiment: null, loadError: '', parameters: [], tables: [], info: [], modes: [], mode: '', observationOnly: false, introSections: [], derivedParameters: [], reportRequirements: [], reportSubmission: [], checked: false, message: '', errorCount: 0 },
 
   onLoad(options = {}) {
     const form = createForm(options.id)
@@ -24,6 +25,7 @@ Page({
     const index = Number(e.currentTarget.dataset.index)
     if (!Number.isInteger(index) || !this.data.parameters[index]) return
     this.setData({ [`parameters[${index}].value`]: e.detail.value, [`parameters[${index}].error`]: '', checked: false, message: '', errorCount: 0 })
+    this.setData({ derivedParameters: deriveParameters(this.data.parameters, this.data.derivedParameters) })
   },
 
   onParameterBlur(e) {
@@ -58,6 +60,7 @@ Page({
     if (!this.data.modes.some(item => item.id === mode)) return
     this.setData({
       mode,
+      parameters: this.data.parameters.map(field => ({ ...field, visible: !field.modes || field.modes.includes(mode), error: '' })),
       tables: this.data.tables.map(item => ({ ...item, visible: !item.modes.length || item.modes.includes(mode), scrollTarget: '' })),
       checked: false, message: '', errorCount: 0,
     })
@@ -68,14 +71,18 @@ Page({
     const table = this.data.tables[index]
     if (!Number.isInteger(index) || !table || !table.visible || !table.adjustable || table.rows.length >= table.maxRows) return
     const definition = definitions[this.data.experiment.id].tables[index]
-    this.setData({ [`tables[${index}].rows`]: table.rows.concat(makeRow(definition, index, table.rows.length)), checked: false, message: '', errorCount: 0 })
+    const next = { ...table, rows: table.rows.concat(makeRow(definition, index, table.rows.length)) }
+    this.setData({ [`tables[${index}]`]: { ...next, ...buildTableView(next, index) }, checked: false, message: '', errorCount: 0 })
   },
 
   onRemoveRow(e) {
     const index = Number(e.currentTarget.dataset.table)
     const table = this.data.tables[index]
     if (!Number.isInteger(index) || !table || !table.visible || !table.adjustable || table.rows.length <= 1) return
-    const remove = () => this.setData({ [`tables[${index}].rows`]: table.rows.slice(0, -1), checked: false, message: '', errorCount: 0 })
+    const remove = () => {
+      const next = { ...table, rows: table.rows.slice(0, -1) }
+      this.setData({ [`tables[${index}]`]: { ...next, ...buildTableView(next, index) }, checked: false, message: '', errorCount: 0 })
+    }
     const last = table.rows[table.rows.length - 1]
     if (last.cells.some(cell => cell.kind !== 'fixed' && cell.kind !== 'computed' && cell.value.trim())) {
       wx.showModal({ title: '删除最后一行？', content: '该行已填写的读数会被删除。', success: res => { if (res.confirm) remove() } })
@@ -84,7 +91,8 @@ Page({
 
   onCheck() {
     const errors = validateForm(this.data)
-    const updates = { checked: true, errorCount: errors.length, message: errors.length ? `有 ${errors.length} 处需要检查，已定位到第一处。` : '当前方案的原始数据已填完整，数值格式检查通过。' }
+    const successMessage = this.data.observationOnly ? '实验记录已填写完整，实际角度的数值格式检查通过。请结合报告要求核对现象分析。' : '当前方案的原始数据已填完整，数值格式检查通过。'
+    const updates = { checked: true, errorCount: errors.length, message: errors.length ? `有 ${errors.length} 处需要检查，已定位到第一处。` : successMessage }
     this.data.parameters.forEach((field, i) => { updates[`parameters[${i}].error`] = '' })
     this.data.tables.forEach((table, t) => {
       updates[`tables[${t}].scrollTarget`] = ''

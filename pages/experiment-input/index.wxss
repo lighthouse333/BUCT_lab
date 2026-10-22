@@ -17,3 +17,36 @@
 .success { display: block; color: #137244; font-size: 25rpx; line-height: 1.7; }
 .secondary { background: #edf3ff; color: #204fa3; margin-top: 18rpx; }
 .reset { background: transparent; color: #64748b; margin-top: 18rpx; }
+.observation-notice { margin-top: 20rpx; }
+.notice-title { display: block; margin-bottom: 10rpx; font-size: 28rpx; font-weight: 600; }
+.report-item { display: flex; gap: 12rpx; margin: 18rpx 0; font-size: 25rpx; line-height: 1.8; }
+.report-number { flex-shrink: 0; width: 32rpx; color: #204fa3; font-weight: 600; }
+.report-item > text:last-child { flex: 1; min-width: 0; }
+.report-source { margin-top: 24rpx; }
+.source-table { position: relative; border-left: 2rpx solid #64748b; border-top: 2rpx solid #64748b; box-sizing: border-box; }
+.source-cell { position: absolute; box-sizing: border-box; border-right: 2rpx solid #64748b; border-bottom: 2rpx solid #64748b; display: flex; align-items: center; justify-content: center; font-size: 26rpx; color: #17202e; background: #fff; }
+.source-heading { background: #f1f5f9; font-weight: 600; }
+.source-label, .source-fixed, .source-computed { padding: 14rpx; white-space: pre-line; line-height: 1.7; text-align: center; overflow-wrap: break-word; }
+.source-computed { color: #64748b; }
+.source-field-cell { flex-direction: column; }
+.source-input { width: 100%; height: 86rpx; min-height: 86rpx; background: #eef4ff; color: #204fa3; font-size: 26rpx; text-align: center; box-sizing: border-box; }
+.source-textarea { width: 100%; height: 100%; min-height: 170rpx; background: #eef4ff; color: #204fa3; font-size: 26rpx; line-height: 1.7; padding: 20rpx; box-sizing: border-box; }
+.source-error { font-size: 21rpx; padding: 0 8rpx; margin: 0; }
+.source-corner { width: 100%; height: 100%; background: linear-gradient(25deg, transparent 49.5%, #64748b 50%, transparent 50.5%); display: flex; flex-direction: column; justify-content: space-between; padding: 10rpx; box-sizing: border-box; font-size: 23rpx; }
+.source-corner text:first-child { text-align: right; }
+.source-corner text:last-child { text-align: left; }
+.source-phenomenon { padding: 20rpx; width: 100%; box-sizing: border-box; line-height: 1.8; }
+.phenomenon-line { margin: 12rpx 0; }
+.axis-answer { display: inline-block; vertical-align: middle; width: 150rpx; border-bottom: 2rpx solid #17202e; background: #eef4ff; }
+.axis-answer input { width: 150rpx; height: 48rpx; text-align: center; color: #204fa3; font-size: 26rpx; }
+.polar-diagram { position: relative; width: 180rpx; height: 180rpx; }
+.diagram-axis { position: absolute; background: #8a8a8a; }
+.horizontal-axis { width: 170rpx; height: 1rpx; top: 90rpx; left: 5rpx; }
+.vertical-axis { width: 1rpx; height: 170rpx; left: 90rpx; top: 5rpx; }
+.wave-shape { position: absolute; box-sizing: border-box; border: 3rpx solid #171717; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.wave-shape.line { width: 0; height: 120rpx; border-width: 0 0 0 3rpx; }
+.wave-shape.narrow { width: 38rpx; height: 130rpx; border-radius: 50%; }
+.wave-shape.wide { width: 100rpx; height: 140rpx; border-radius: 50%; }
+.wave-shape.circle { width: 130rpx; height: 130rpx; border-radius: 50%; }
+.intro-section { margin: 24rpx 0; }
+.intro-line { display: block; margin: 10rpx 0; font-size: 26rpx; line-height: 1.8; }

@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict')
 const test = require('node:test')
-const { parseAngle, separation, calculateGroup, statistics, wavelength } = require('../utils/spectral-analysis')
+const { parseAngle, separation, calculateGroup, statistics, wavelength, propagateWavelength } = require('../utils/spectral-analysis')
 const near = (actual, expected, tolerance = 1e-10) => assert.ok(Math.abs(actual - expected) < tolerance, `${actual} != ${expected}`)
 
 test('角度输入明确区分十进制度与度分；拒绝无效分和越界角', () => {
@@ -41,6 +41,21 @@ test('单次不伪造方差；表中没有n=11，不自行插值；一致数据�
 test('一级光栅：1000条/mm、30°对应500nm', () => {
   near(wavelength(30, 1000), 500)
   assert.throws(() => wavelength(30, 0))
+})
+
+test('光栅0.1%和角度仪器项按rad传播：500nm的两项0.5nm、√0.75nm合成1nm', () => {
+  const result = propagateWavelength(30, 1000, 0, 0.1, 0.001)
+  near(result.lambda, 500)
+  near(result.gratingContribution, 0.5)
+  near(result.thetaUncertainty, 0.001)
+  near(result.knownUncertainty, 1)
+  assert.equal(result.complete, true)
+  const partial = propagateWavelength(30, 1000, 0, 0.1)
+  near(partial.knownUncertainty, 0.5)
+  assert.equal(partial.complete, false)
+  assert.equal(partial.thetaUncertainty, null)
+  assert.equal(propagateWavelength(30, 1000, null, 0.1, 0.001).complete, false)
+  assert.throws(() => propagateWavelength(30, 1000, 0, -0.1, 0))
 })
 
 function pageHarness() {
@@ -84,7 +99,22 @@ test('页面统计完整组；半填阻止汇总，修改后立即更新、清�
   page.recalculate(); assert.equal(page.data.result, null)
 })
 
-test('首页只将光谱实验接入新路由', () => {
+test('光谱页面默认300条/mm及0.1%，未知仪器项不冒充总不确定度，负数被阻止', () => {
+  const page = pageHarness()
+  assert.equal(page.data.density, '300')
+  assert.equal(page.data.relativeGratingUncertainty, '0.1')
+  page.data.groups.forEach(group => Object.assign(group, { minusLeft: '0', minusRight: '180', plusLeft: '60', plusRight: '240' }))
+  page.recalculate()
+  assert.equal(page.data.result.complete, false)
+  assert.ok(Number(page.data.result.wavelengthUncertainty) > 0)
+  page.onInfoInput({ currentTarget: { dataset: { key: 'angularInstrumentUncertainty' } }, detail: { value: '0.001' } })
+  assert.equal(page.data.result.complete, true)
+  page.onInfoInput({ currentTarget: { dataset: { key: 'angularInstrumentUncertainty' } }, detail: { value: '-1' } })
+  assert.ok(page.data.parameterError)
+  assert.equal(page.data.result.wavelengthUncertainty, '—')
+})
+
+test('首页保留光谱独立路由，并支持已接入的RLC实验及未配置提示', () => {
   let definition, navigated, modal
   global.Page = value => { definition = value }
   global.wx = { navigateTo: value => { navigated = value.url }, showModal: value => { modal = value } }
@@ -92,6 +122,8 @@ test('首页只将光谱实验接入新路由', () => {
   definition.onConfirmSelection.call({ data: { selectedExperiment: { id: 'spectral-analysis' } } })
   assert.equal(navigated, '/pages/spectral-analysis/index')
   definition.onConfirmSelection.call({ data: { selectedExperiment: { id: 'rlc', name: 'RLC' } } })
+  assert.equal(navigated, '/pages/experiment-input/index?id=rlc')
+  definition.onConfirmSelection.call({ data: { selectedExperiment: { id: 'unconfigured', name: '未配置实验' } } })
   assert.ok(modal)
   delete global.Page; delete global.wx
 })
