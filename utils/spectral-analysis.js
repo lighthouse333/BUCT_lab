@@ -54,4 +54,23 @@ function wavelength(theta, linesPerMm) {
   return 1e6 / linesPerMm * Math.sin(theta * Math.PI / 180)
 }
 
-module.exports = { TP, parseAngle, separation, calculateGroup, statistics, wavelength }
+function propagateWavelength(thetaDegrees, density, uaDegrees, relativeDPercent, ubRadians = null) {
+  if (!Number.isFinite(relativeDPercent) || relativeDPercent < 0 ||
+      (ubRadians != null && (!Number.isFinite(ubRadians) || ubRadians < 0))) throw new Error('标准不确定度须为非负数')
+  const theta = thetaDegrees * Math.PI / 180
+  const lambda = wavelength(thetaDegrees, density)
+  const ua = uaDegrees == null ? null : uaDegrees * Math.PI / 180
+  const derivative = 1e6 / density * Math.cos(theta)
+  const gratingContribution = Math.abs(lambda) * relativeDPercent / 100
+  const angleVariance = (ua == null ? 0 : ua * ua) + (ubRadians == null ? 0 : ubRadians * ubRadians)
+  const complete = ua != null && ubRadians != null
+  return {
+    lambda, theta, uaRadians: ua,
+    thetaUncertainty: complete ? Math.sqrt(angleVariance) : null,
+    gratingContribution,
+    knownUncertainty: Math.sqrt(gratingContribution * gratingContribution + derivative * derivative * angleVariance),
+    complete,
+  }
+}
+
+module.exports = { TP, parseAngle, separation, calculateGroup, statistics, wavelength, propagateWavelength }

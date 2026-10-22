@@ -37,3 +37,16 @@ button[disabled] { background: #e2e8f0; color: #8995a7; }
 .metric text:last-child { text-align: right; color: #204fa3; overflow-wrap: anywhere; }
 .primary { background: #204fa3; color: white; margin-top: 24rpx; }
 .formulas > text:not(.section-title) { display: block; color: #64748b; font-size: 23rpx; line-height: 1.8; margin-top: 12rpx; }
+.spectral-source { width: 1142rpx; }
+.s-row { display: flex; }
+.s-label, .s-col, .s-double, .s-group-title { flex-shrink: 0; box-sizing: border-box; border-right: 2rpx solid #64748b; border-bottom: 2rpx solid #64748b; display: flex; align-items: center; justify-content: center; padding: 12rpx; min-height: 100rpx; font-size: 25rpx; text-align: center; line-height: 1.7; }
+.s-label { width: 180rpx; background: #f1f5f9; }
+.s-col { width: 240rpx; }
+.s-group { width: 480rpx; flex-shrink: 0; }
+.s-group-title { width: 480rpx; height: 80rpx; min-height: 80rpx; background: #f1f5f9; }
+.s-group .s-col { min-height: 80rpx; height: 80rpx; }
+.s-tall { height: 160rpx; }
+.s-header { background: #f1f5f9; }
+.s-input { display: block; height: 100rpx; background: #eef4ff; color: #204fa3; }
+.s-double { width: 480rpx; }
+.full-label textarea { width: 100%; min-height: 180rpx; padding: 16rpx; margin-top: 12rpx; box-sizing: border-box; background: #f4f7fb; border-radius: 8rpx; font-size: 26rpx; line-height: 1.8; }
