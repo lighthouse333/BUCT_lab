@@ -37,13 +37,13 @@
   </view>
   <view class="card">
     <text class="section-title">光栅常数与不确定度</text>
-    <label class="full-label">光栅刻线密度（条/mm）<input value="{{density}}" data-key="density" bindinput="onInfoInput" placeholder="原件300条/mm" /></label>
+    <label class="full-label">光栅刻线密度（条/mm）<scientific-input value="{{density}}" data-key="density" bindinput="onInfoInput" placeholder="原件300条/mm" label="光栅刻线密度（条/mm）" /></label>
     <text class="hint">光栅常数 d=1/{{density || '待填写'}} mm，一级衍射k=1。</text>
-    <label class="full-label">光栅常数相对标准不确定度 u(d)/d（%）<input value="{{relativeGratingUncertainty}}" data-key="relativeGratingUncertainty" bindinput="onInfoInput" placeholder="原件0.1%" /></label>
-    <label class="full-label">角度仪器标准不确定度 u_B(θ)（rad）<input value="{{angularInstrumentUncertainty}}" data-key="angularInstrumentUncertainty" bindinput="onInfoInput" placeholder="依据仪器及指定课本填写" /></label>
+    <label class="full-label"><scientific-text value="光栅常数相对标准不确定度 u(d)/d（%）" /><scientific-input value="{{relativeGratingUncertainty}}" data-key="relativeGratingUncertainty" bindinput="onInfoInput" placeholder="原件0.1%" label="光栅常数相对标准不确定度（%）" /></label>
+    <label class="full-label"><scientific-text value="角度仪器标准不确定度 u_B(θ)（rad）" /><scientific-input value="{{angularInstrumentUncertainty}}" data-key="angularInstrumentUncertainty" bindinput="onInfoInput" placeholder="依据仪器及指定课本填写" label="角度仪器标准不确定度（rad）" /></label>
     <text class="hint">填写已换算到衍射角θ的标准不确定度，勿直接填游标误差限。未提供时只显示已知项合成值，不作为完整总不确定度。</text>
-    <label class="full-label">参考波长（nm，选填）<input value="{{reference}}" data-key="reference" bindinput="onInfoInput" /></label>
-    <text wx:if="{{parameterError}}" class="error">{{parameterError}}</text>
+    <label class="full-label">参考波长（nm，选填）<scientific-input value="{{reference}}" data-key="reference" bindinput="onInfoInput" label="参考波长（nm，选填）" /></label>
+    <scientific-text wx:if="{{parameterError}}" text-class="error" value="{{parameterError}}" />
   </view>
   <view class="card table-card">
     <text class="section-title">表2 θ数据处理记录表</text>
@@ -55,20 +55,20 @@
       </view>
     </scroll-view>
   </view>
-  <text wx:if="{{message}}" class="notice">{{message}}</text>
+  <scientific-text wx:if="{{message}}" text-class="notice" value="{{message}}" />
   <view wx:if="{{result}}" class="card results">
     <text class="section-title">计算结果</text>
     <text class="hint">n={{result.n}} · p=0.683 · tₚ={{result.tp}}</text>
-    <view class="metric"><text>平均衍射角</text><text>{{result.mean}}</text></view>
-    <view class="metric"><text>平均衍射角θ（rad）</text><text>{{result.meanRadians}}</text></view>
-    <view class="metric"><text>实验方差s²（°²，分母n−1）</text><text>{{result.variance}}</text></view>
-    <view class="metric"><text>实验标准差s（°）</text><text>{{result.sd}}</text></view>
-    <view class="metric"><text>均值标准差（°）</text><text>{{result.sem}}</text></view>
-    <view class="metric"><text>角度A类不确定度（rad）</text><text>{{result.uaRadians}}</text></view>
-    <view class="metric"><text>角度合成标准不确定度（rad）</text><text>{{result.thetaUncertainty}}</text></view>
-    <view class="metric"><text>波长λ（nm）</text><text>{{result.wavelength}}</text></view>
-    <view class="metric"><text>光栅常数贡献（nm）</text><text>{{result.gratingContribution}}</text></view>
-    <view class="metric"><text>{{result.complete ? '波长合成标准不确定度（nm）' : '波长不确定度已知项合成值（nm）'}}</text><text>{{result.wavelengthUncertainty}}</text></view>
+    <view class="metric"><text>平均衍射角</text><scientific-text value="{{result.mean}}" /></view>
+    <view class="metric"><text>平均衍射角θ（rad）</text><scientific-text value="{{result.meanRadians}}" /></view>
+    <view class="metric"><text>实验方差s²（°²，分母n−1）</text><scientific-text value="{{result.variance}}" /></view>
+    <view class="metric"><text>实验标准差s（°）</text><scientific-text value="{{result.sd}}" /></view>
+    <view class="metric"><text>均值标准差（°）</text><scientific-text value="{{result.sem}}" /></view>
+    <view class="metric"><text>角度A类不确定度（rad）</text><scientific-text value="{{result.uaRadians}}" /></view>
+    <view class="metric"><text>角度合成标准不确定度（rad）</text><scientific-text value="{{result.thetaUncertainty}}" /></view>
+    <view class="metric"><text>波长λ（nm）</text><scientific-text value="{{result.wavelength}}" /></view>
+    <view class="metric"><text>光栅常数贡献（nm）</text><scientific-text value="{{result.gratingContribution}}" /></view>
+    <view class="metric"><scientific-text value="{{result.complete ? '波长合成标准不确定度（nm）' : '波长不确定度已知项合成值（nm）'}}" /><scientific-text value="{{result.wavelengthUncertainty}}" /></view>
     <view class="metric"><text>相对参考波长的百分差</text><text>{{result.relativeError}} %</text></view>
     <text wx:if="{{!result.complete}}" class="notice">角度仪器项或A类项尚不完整，当前值不能作为完整总不确定度。</text>
     <text class="hint">按各项独立的条件合成，θ和角度不确定度均以rad传播；计算值供核对，报告最终修约另行处理。</text>
@@ -80,10 +80,12 @@
     <label class="full-label">结合现象与计算结果分析发光元素<textarea value="{{elementAnalysis}}" data-key="elementAnalysis" bindinput="onInfoInput" placeholder="根据实际观测及波长分析，不只凭单条谱线自动下结论" maxlength="1000" /></label>
   </view>
   <view class="card formulas">
+    <button class="primary" bindtap="onStartCalculation" loading="{{calculating}}" disabled="{{calculating}}">开始计算 · 查看报告数据</button>
+    <text class="hint">进入结果页查看完整处理表、计算过程和实验报告要求。返回后可继续修改原始记录。</text>
     <text class="section-title">计算依据</text>
     <text>2θ=(2θ左+2θ右)/2，θ=(2θ左+2θ右)/4。按完整测次统计，不把左右游标当成两次独立测量。</text>
-    <text>u_A(θ)=tₚ·s/√n。tₚ取谢超然《大学物理实验》(2015)表1.1.2；未列的n不自动插值。</text>
-    <text>一级衍射λ=d·sinθ；独立项传播u²(λ)=(λ·u(d)/d)²+(d·cosθ)²·[u_A²(θ)+u_B²(θ)]。</text>
-    <text>离开页面后记录不保留，请及时复制。</text>
+    <scientific-text text-class="formula-note" value="u_A(θ)=tₚ·s/√n。tₚ取谢超然《大学物理实验》(2015)表1.1.2；未列的n不自动插值。" />
+    <scientific-text text-class="formula-note" value="一级衍射λ=d·sinθ；独立项传播u²(λ)=(λ·u(d)/d)²+(d·cosθ)²·[u_A²(θ)+u_B²(θ)]。" />
+    <text>从报告结果页返回可继续修改；关闭小程序前请及时复制记录。</text>
   </view>
 </view>

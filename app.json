@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/spectral-analysis/index",
     "pages/experiment-input/index",
+    "pages/experiment-report/index",
     "pages/logs/logs"
   ],
   "window": {

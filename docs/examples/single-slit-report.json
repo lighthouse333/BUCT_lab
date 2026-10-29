@@ -1,0 +1,662 @@
+{
+  "reportSchemaVersion": 2,
+  "formulaVersion": "2026-10-28-report",
+  "inputSchemaVersion": 3,
+  "experiment": {
+    "id": "single-slit",
+    "name": "单缝夫琅禾费衍射",
+    "category": "光学"
+  },
+  "status": "complete",
+  "kind": "quantitative",
+  "reportReady": true,
+  "reportFinished": false,
+  "info": {
+    "studentClass": "",
+    "studentName": "",
+    "studentId": "",
+    "date": "",
+    "teacher": ""
+  },
+  "rawInput": {
+    "experimentId": "single-slit",
+    "schemaVersion": 3,
+    "templateVersion": "2026-10-28-report",
+    "mode": "",
+    "info": {
+      "studentClass": "",
+      "studentName": "",
+      "studentId": "",
+      "date": "",
+      "teacher": ""
+    },
+    "parameters": {
+      "slitWidth": "0.1",
+      "order": "3",
+      "distanceLimit": "0.05",
+      "positionLimit": "0.004"
+    },
+    "tables": [
+      {
+        "id": "distances",
+        "rows": [
+          {
+            "number": "1",
+            "z": "100"
+          },
+          {
+            "number": "2",
+            "z": "100"
+          },
+          {
+            "number": "3",
+            "z": "100"
+          }
+        ]
+      },
+      {
+        "id": "minima",
+        "rows": [
+          {
+            "left": "-18",
+            "center": "0",
+            "right": "18"
+          }
+        ]
+      }
+    ]
+  },
+  "processingOptions": {
+    "uncertaintyPolicy": "course",
+    "coverageFactor": 2,
+    "autoGraph": true,
+    "limits": {}
+  },
+  "assumptions": [
+    "按实验要求固定k=3，左右均使用第3级暗纹位置。Δxₖ按原表已给的暗纹平均距离误差限处理；中心误差在左右对称平均距离中相消，不重复计入。",
+    "单缝宽度按给定常数处理；未额外计入宽度校准不确定度。"
+  ],
+  "issues": [],
+  "results": [
+    {
+      "id": "distance",
+      "label": "平均衍射距离",
+      "value": 1,
+      "unit": "m",
+      "formula": "x̄=Σxᵢ/n",
+      "uncertainty": {
+        "complete": true,
+        "combined": 0.0005,
+        "known": 0.0005,
+        "expanded": null,
+        "reported": 0.0005,
+        "coverageFactor": 1,
+        "policy": "course",
+        "components": [
+          {
+            "name": "A类项",
+            "sensitivity": 0.01,
+            "u": 0
+          },
+          {
+            "name": "仪器项",
+            "sensitivity": 0.01,
+            "u": 0.05
+          }
+        ],
+        "missing": [],
+        "a": 0,
+        "b": 0.0005,
+        "tp": 1.32,
+        "instrumentLimit": 0.0005,
+        "singleMeasurementRule": true
+      },
+      "statistics": {
+        "n": 3,
+        "mean": 100,
+        "variance": 0,
+        "sd": 0,
+        "sem": 0,
+        "min": 100,
+        "max": 100,
+        "sumSquaredDeviations": 0,
+        "threeSigmaThreshold": 0,
+        "deviations": [
+          {
+            "index": 1,
+            "value": 100,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          },
+          {
+            "index": 2,
+            "value": 100,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          },
+          {
+            "index": 3,
+            "value": 100,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          }
+        ],
+        "uncertainty": {
+          "complete": true,
+          "combined": 0.05,
+          "known": 0.05,
+          "expanded": null,
+          "reported": 0.05,
+          "coverageFactor": 1,
+          "policy": "course",
+          "components": [
+            {
+              "name": "A类项",
+              "sensitivity": 1,
+              "u": 0
+            },
+            {
+              "name": "仪器项",
+              "sensitivity": 1,
+              "u": 0.05
+            }
+          ],
+          "missing": [],
+          "a": 0,
+          "b": 0.05,
+          "tp": 1.32,
+          "instrumentLimit": 0.05,
+          "singleMeasurementRule": true
+        },
+        "inputToOutputScale": 0.01,
+        "outputUnit": "m"
+      },
+      "inputs": {
+        "count": 3,
+        "instrumentLimit": 0.05,
+        "inputToOutputScale": 0.01
+      },
+      "display": "1 m",
+      "formatted": {
+        "value": "100.000",
+        "uncertainty": "0.050",
+        "unit": "cm",
+        "expression": "(100.000 ± 0.050) cm",
+        "scale": 100,
+        "sourceUnit": "m"
+      }
+    },
+    {
+      "id": "darkDistance",
+      "label": "平均暗纹至中央距离",
+      "value": 0.018000000000000002,
+      "unit": "m",
+      "formula": "x̄=Σxᵢ/n",
+      "uncertainty": {
+        "complete": true,
+        "combined": 0.000004,
+        "known": 0.000004,
+        "expanded": null,
+        "reported": 0.000004,
+        "coverageFactor": 1,
+        "policy": "course",
+        "components": [
+          {
+            "name": "A类项",
+            "sensitivity": 0.001,
+            "u": 0
+          },
+          {
+            "name": "仪器项",
+            "sensitivity": 0.001,
+            "u": 0.004
+          }
+        ],
+        "missing": [],
+        "a": 0,
+        "b": 0.000004,
+        "tp": null,
+        "instrumentLimit": 0.000004,
+        "singleMeasurementRule": true
+      },
+      "statistics": {
+        "n": 1,
+        "mean": 18,
+        "variance": null,
+        "sd": null,
+        "sem": null,
+        "min": 18,
+        "max": 18,
+        "sumSquaredDeviations": 0,
+        "threeSigmaThreshold": null,
+        "deviations": [
+          {
+            "index": 1,
+            "value": 18,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          }
+        ],
+        "uncertainty": {
+          "complete": true,
+          "combined": 0.004,
+          "known": 0.004,
+          "expanded": null,
+          "reported": 0.004,
+          "coverageFactor": 1,
+          "policy": "course",
+          "components": [
+            {
+              "name": "A类项",
+              "sensitivity": 1,
+              "u": 0
+            },
+            {
+              "name": "仪器项",
+              "sensitivity": 1,
+              "u": 0.004
+            }
+          ],
+          "missing": [],
+          "a": 0,
+          "b": 0.004,
+          "tp": null,
+          "instrumentLimit": 0.004,
+          "singleMeasurementRule": true
+        },
+        "inputToOutputScale": 0.001,
+        "outputUnit": "m"
+      },
+      "inputs": {
+        "count": 1,
+        "instrumentLimit": 0.004,
+        "inputToOutputScale": 0.001
+      },
+      "display": "0.018 m",
+      "formatted": {
+        "value": "18.0000",
+        "uncertainty": "0.0040",
+        "unit": "mm",
+        "expression": "(18.0000 ± 0.0040) mm",
+        "scale": 1000,
+        "sourceUnit": "m"
+      }
+    },
+    {
+      "id": "wavelength",
+      "label": "单缝测得激光波长",
+      "value": 600.0000000000001,
+      "unit": "nm",
+      "formula": "λ=a x̄ₖ/(3z)",
+      "uncertainty": {
+        "complete": true,
+        "combined": 0.3282952600598702,
+        "known": 0.3282952600598702,
+        "expanded": 0.6565905201197404,
+        "reported": 0.6565905201197404,
+        "coverageFactor": 2,
+        "policy": "course",
+        "components": [
+          {
+            "name": "单缝宽度",
+            "sensitivity": 6000000.000000001,
+            "u": 0
+          },
+          {
+            "name": "平均暗纹距离",
+            "sensitivity": 33333.333333333336,
+            "u": 0.000004
+          },
+          {
+            "name": "衍射距离",
+            "sensitivity": -600.0000000000001,
+            "u": 0.0005
+          }
+        ],
+        "missing": []
+      },
+      "inputs": {
+        "slitWidthM": 0.0001,
+        "order": 3,
+        "darkDistanceM": 0.018000000000000002,
+        "distanceM": 1
+      },
+      "display": "600 nm",
+      "formatted": {
+        "value": "600.00",
+        "uncertainty": "0.66",
+        "unit": "nm",
+        "expression": "(600.00 ± 0.66) nm",
+        "scale": 1,
+        "sourceUnit": "nm"
+      }
+    }
+  ],
+  "tables": [
+    {
+      "id": "selected-minima",
+      "title": "第3级暗纹距离",
+      "columns": [
+        {
+          "key": "order",
+          "label": "k级",
+          "unit": ""
+        },
+        {
+          "key": "left",
+          "label": "左侧第3级暗纹位置",
+          "unit": "mm"
+        },
+        {
+          "key": "center",
+          "label": "中央位置",
+          "unit": "mm"
+        },
+        {
+          "key": "right",
+          "label": "右侧第3级暗纹位置",
+          "unit": "mm"
+        },
+        {
+          "key": "distanceLeft",
+          "label": "左侧至中央 xₖ左",
+          "unit": "mm"
+        },
+        {
+          "key": "distanceRight",
+          "label": "右侧至中央 xₖ右",
+          "unit": "mm"
+        },
+        {
+          "key": "averageDistance",
+          "label": "平均暗纹距离 x̄ₖ",
+          "unit": "mm"
+        }
+      ],
+      "rows": [
+        {
+          "order": 3,
+          "left": -18,
+          "center": 0,
+          "right": 18,
+          "distanceLeft": 18,
+          "distanceRight": 18,
+          "averageDistance": 18
+        }
+      ]
+    }
+  ],
+  "charts": [],
+  "steps": [
+    {
+      "id": "distance",
+      "label": "平均衍射距离",
+      "formula": "x̄=Σxᵢ/n",
+      "value": 1,
+      "unit": "m",
+      "method": "formula",
+      "inputs": {
+        "count": 3,
+        "instrumentLimit": 0.05,
+        "inputToOutputScale": 0.01
+      }
+    },
+    {
+      "id": "darkDistance",
+      "label": "平均暗纹至中央距离",
+      "formula": "x̄=Σxᵢ/n",
+      "value": 0.018000000000000002,
+      "unit": "m",
+      "method": "formula",
+      "inputs": {
+        "count": 1,
+        "instrumentLimit": 0.004,
+        "inputToOutputScale": 0.001
+      }
+    },
+    {
+      "id": "wavelength",
+      "label": "单缝测得激光波长",
+      "formula": "λ=a x̄ₖ/(3z)",
+      "value": 600.0000000000001,
+      "unit": "nm",
+      "method": "formula",
+      "inputs": {
+        "slitWidthM": 0.0001,
+        "order": 3,
+        "darkDistanceM": 0.018000000000000002,
+        "distanceM": 1
+      }
+    }
+  ],
+  "observations": [],
+  "referenceMaterial": [],
+  "rawTableSchemas": [
+    {
+      "id": "distances",
+      "title": "衍射距离z的测量数据",
+      "columns": [
+        {
+          "key": "number",
+          "label": "次序",
+          "kind": "fixed",
+          "width": 110
+        },
+        {
+          "key": "z",
+          "label": "z/cm",
+          "kind": "number",
+          "width": 180,
+          "positive": true
+        }
+      ],
+      "layout": {
+        "type": "horizontal",
+        "fields": [
+          "z"
+        ],
+        "average": true
+      },
+      "fixedCells": {},
+      "sourceNumber": "1"
+    },
+    {
+      "id": "minima",
+      "title": "单缝衍射k级暗条纹间距的测量数据",
+      "columns": [
+        {
+          "key": "left",
+          "label": "主极大左侧k级极小位置 k左/mm",
+          "kind": "number",
+          "width": 180
+        },
+        {
+          "key": "center",
+          "label": "主极大的中心位置 O/mm",
+          "kind": "number",
+          "width": 180
+        },
+        {
+          "key": "right",
+          "label": "主极大右侧k级极小位置 k右/mm",
+          "kind": "number",
+          "width": 180
+        },
+        {
+          "key": "distanceLeft",
+          "label": "左侧极小与中央的距离 xₖ左/mm",
+          "kind": "computed",
+          "width": 180
+        },
+        {
+          "key": "distanceRight",
+          "label": "右侧极小与中央的距离 xₖ右/mm",
+          "kind": "computed",
+          "width": 180
+        },
+        {
+          "key": "meanDistance",
+          "label": "k级极小与中央的平均距离 x̄ₖ/mm",
+          "kind": "computed",
+          "width": 180
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      },
+      "fixedCells": {},
+      "sourceNumber": "3"
+    }
+  ],
+  "reportTables": [
+    {
+      "id": "distances",
+      "title": "衍射距离z的测量数据",
+      "sourceNumber": "1",
+      "columns": [
+        {
+          "key": "number",
+          "label": "次序",
+          "kind": "fixed",
+          "width": 110
+        },
+        {
+          "key": "z",
+          "label": "z/cm",
+          "kind": "number",
+          "width": 180,
+          "positive": true
+        }
+      ],
+      "layout": {
+        "type": "horizontal",
+        "fields": [
+          "z"
+        ],
+        "average": true
+      },
+      "hint": "",
+      "fixedCells": {},
+      "averages": {
+        "z": 100
+      },
+      "rows": [
+        {
+          "number": "1",
+          "z": "100"
+        },
+        {
+          "number": "2",
+          "z": "100"
+        },
+        {
+          "number": "3",
+          "z": "100"
+        }
+      ]
+    },
+    {
+      "id": "minima",
+      "title": "单缝衍射k级暗条纹间距的测量数据",
+      "sourceNumber": "3",
+      "columns": [
+        {
+          "key": "left",
+          "label": "主极大左侧k级极小位置 k左/mm",
+          "kind": "number",
+          "width": 180
+        },
+        {
+          "key": "center",
+          "label": "主极大的中心位置 O/mm",
+          "kind": "number",
+          "width": 180
+        },
+        {
+          "key": "right",
+          "label": "主极大右侧k级极小位置 k右/mm",
+          "kind": "number",
+          "width": 180
+        },
+        {
+          "key": "distanceLeft",
+          "label": "左侧极小与中央的距离 xₖ左/mm",
+          "kind": "computed",
+          "width": 180
+        },
+        {
+          "key": "distanceRight",
+          "label": "右侧极小与中央的距离 xₖ右/mm",
+          "kind": "computed",
+          "width": 180
+        },
+        {
+          "key": "meanDistance",
+          "label": "k级极小与中央的平均距离 x̄ₖ/mm",
+          "kind": "computed",
+          "width": 180
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      },
+      "hint": "本实验固定k=3，左右均取第3级暗纹。表3三项位置从已有光强分布图读取；表2扫描数据无需誊录。",
+      "fixedCells": {},
+      "averages": {},
+      "rows": [
+        {
+          "left": "-18",
+          "center": "0",
+          "right": "18",
+          "distanceLeft": 18,
+          "distanceRight": 18,
+          "meanDistance": 18
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "single-slit-intensity-plot",
+      "label": "用原始光强扫描数据绘制并提交光强分布图；报告不必誊录表2。表3位置应从该实测图读取，程序不凭空生成扫描曲线。",
+      "status": "manual"
+    },
+    {
+      "id": "actual-steps",
+      "label": "根据本人实际操作写实验步骤。",
+      "status": "manual"
+    },
+    {
+      "id": "analysis",
+      "label": "结合实际现象、数值、图表完成结果及误差分析；计算数据不等于报告已完成。",
+      "status": "manual"
+    }
+  ],
+  "requirements": {
+    "source": "原始PDF第16–18页；用户确认固定第3级（2026-10-28）",
+    "processing": [
+      "用Excel或Matlab绘光强分布图，结合图完成报告表3的暗纹位置及距离。",
+      "计算衍射距离z及其不确定度。",
+      "固定k=3，使用左右第3级暗纹计算平均距离x̄ₖ及不确定度；λ=a·x̄ₖ/(3z)，计算波长及不确定度，完成误差分析。",
+      "表2扫描数据量大，无需在报告中誊录，但须保留原始记录。"
+    ],
+    "submission": [
+      "实验报告整理成PDF上传，文件命名：班级-姓名-实验名称。",
+      "提交实验报告扫描页和有教师签字的原始数据扫描页。",
+      "缺少任一规定内容按实验报告未完成处理，扣除相应分数，且不允许退回重新提交。",
+      "扫描页或照片必须为完整页面或略大于页面。",
+      "在规定时间内提交；迟交按原件说明扣实验报告分1分。",
+      "另须提交单缝衍射光强分布图。"
+    ],
+    "notes": [
+      "级次按用户确认的实验要求固定为3。原件Δz、Δxₖ的标准不确定度换算据指定课本确定。"
+    ]
+  },
+  "source": "下载.pdf，第17–18页；用户确认固定第3级（2026-10-28）",
+  "tableBasis": "报告表1衍射距离、表3的暗纹位置与距离；按实验要求固定k=3。表2光强扫描无需誊录，不作为本页必填表。",
+  "missingInputs": []
+}

@@ -1,0 +1,120 @@
+{
+  "description": "人工校验示例，非实测；使用小程序固定教材规则，无用户计算设置。",
+  "input": {
+    "experimentId": "young-modulus",
+    "schemaVersion": 3,
+    "templateVersion": "2026-10-28-report",
+    "mode": "",
+    "info": {
+      "studentClass": "",
+      "studentName": "",
+      "studentId": "",
+      "date": "",
+      "teacher": ""
+    },
+    "parameters": {
+      "wireLength": "100",
+      "division": "1",
+      "micrometerZero": "0.01",
+      "diameterLimit": "0.004",
+      "gravity": "10",
+      "leverDistanceM": "1",
+      "leverArmM": "0.1",
+      "extensionLimitMm": "0.01",
+      "leverDistanceLimitM": "0.001",
+      "leverArmLimitM": "0.0001"
+    },
+    "tables": [
+      {
+        "id": "loading",
+        "rows": [
+          {
+            "number": "1",
+            "mass": "0",
+            "loading": "0.000",
+            "unloading": "0.000"
+          },
+          {
+            "number": "2",
+            "mass": "100",
+            "loading": "0.200",
+            "unloading": "0.200"
+          },
+          {
+            "number": "3",
+            "mass": "200",
+            "loading": "0.400",
+            "unloading": "0.400"
+          },
+          {
+            "number": "4",
+            "mass": "300",
+            "loading": "0.600",
+            "unloading": "0.600"
+          },
+          {
+            "number": "5",
+            "mass": "400",
+            "loading": "0.800",
+            "unloading": "0.800"
+          },
+          {
+            "number": "6",
+            "mass": "500",
+            "loading": "1.000",
+            "unloading": "1.000"
+          },
+          {
+            "number": "7",
+            "mass": "600",
+            "loading": "1.200",
+            "unloading": "1.200"
+          },
+          {
+            "number": "8",
+            "mass": "700",
+            "loading": "1.400",
+            "unloading": "1.400"
+          },
+          {
+            "number": "9",
+            "mass": "800",
+            "loading": "1.600",
+            "unloading": "1.600"
+          },
+          {
+            "number": "10",
+            "mass": "900",
+            "loading": "1.800",
+            "unloading": "1.800"
+          }
+        ]
+      },
+      {
+        "id": "diameters",
+        "rows": [
+          {
+            "number": "1",
+            "diameter": "2.01"
+          },
+          {
+            "number": "2",
+            "diameter": "2.01"
+          },
+          {
+            "number": "3",
+            "diameter": "2.01"
+          },
+          {
+            "number": "4",
+            "diameter": "2.01"
+          },
+          {
+            "number": "5",
+            "diameter": "2.01"
+          }
+        ]
+      }
+    ]
+  }
+}

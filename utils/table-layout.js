@@ -11,6 +11,18 @@ function buildTableView(table, tableIndex) {
     const cell = table.rows[row].cells[column]
     add(x, y, w, h, '', { field: true, row, column, id: cell.id })
   }
+  if (layout.type === 'spectral-results') {
+    const w = 210, header = 180
+    add(0, 0, w, header, '测量次数', { heading: true })
+    add(w, 0, 2 * w, 90, '2θ', { heading: true })
+    add(w, 90, w, 90, '左', { heading: true }); add(2 * w, 90, w, 90, '右', { heading: true })
+    add(3 * w, 0, w, header, '消除偏心差后的2θ', { heading: true }); add(4 * w, 0, w, header, 'θ', { heading: true })
+    table.rows.forEach((_, r) => table.columns.forEach((_, c) => field(r, c, c * w, header + r * height, w, height)))
+    const y = header + table.rows.length * height
+    add(0, y, w, height, '平均', { heading: true }); add(w, y, 2 * w, height, '—'); add(3 * w, y, w, height, '—')
+    add(4 * w, y, w, height, (table.averages || {}).theta == null ? '待计算' : String(table.averages.theta), { computed: true })
+    return { displayCells: cells, width: w * 5, height: y + height }
+  }
   function horizontalBlock(start, count, y, options = layout) {
     const left = 300, w = 170
     const head = options.headerKey ? indexOf(options.headerKey) : 0
@@ -26,7 +38,12 @@ function buildTableView(table, tableIndex) {
     if (options.average || options.ellipsis) {
       const x = left + count * w
       add(x, y, w, height, options.average ? '平均值' : '…', { heading: true })
-      fields.forEach((_, r) => add(x, y + (r + 1) * height, w, height, options.average ? '待计算' : '…', { computed: !!options.average }))
+      fields.forEach((column, r) => {
+        const key = table.columns[column].key
+        const applicable = !options.averageKeys || options.averageKeys.includes(key)
+        const value = (table.averages || {})[key]
+        add(x, y + (r + 1) * height, w, height, options.average ? applicable ? value == null ? '待计算' : String(value) : '—' : '…', { computed: !!options.average })
+      })
     }
     return { width: left + (count + (options.average || options.ellipsis ? 1 : 0)) * w, height: (fields.length + 1) * height }
   }
@@ -48,7 +65,7 @@ function buildTableView(table, tableIndex) {
     for (let group = 0; group < 6; group++) {
       add(left + group * w, 0, w, height, table.rows[group * 5].cells[0].value, { heading: true })
       for (let trial = 0; trial < 5; trial++) field(group * 5 + trial, 2, left + group * w, (trial + 1) * height, w, height)
-      add(left + group * w, 6 * height, w, height, '待计算', { computed: true })
+      add(left + group * w, 6 * height, w, height, (table.averages || {})[String(group)] == null ? '待计算' : String(table.averages[String(group)]), { computed: true })
     }
     add(0, height, left, 5 * height, '转动周期\n5T_x/s', { heading: true })
     add(0, 6 * height, left, height, '平均周期\n5T_x/s', { heading: true })
@@ -123,7 +140,13 @@ function buildTableView(table, tableIndex) {
       field(r, c, xs[c], headerHeight + r * rowHeight, widths[c], span * rowHeight)
     } else field(r, c, xs[c], headerHeight + r * rowHeight, widths[c], rowHeight)
   }))
-  return { displayCells: cells, width: widths.reduce((a, b) => a + b, 0), height: headerHeight + table.rows.length * rowHeight }
+  const averageKeys = layout.averageKeys
+  if (averageKeys) table.columns.forEach((column, c) => {
+    const value = (table.averages || {})[column.key]
+    add(xs[c], headerHeight + table.rows.length * rowHeight, widths[c], rowHeight,
+      c === 0 ? '平均值' : averageKeys.includes(column.key) ? value == null ? '待计算' : String(value) : '—', { computed: true })
+  })
+  return { displayCells: cells, width: widths.reduce((a, b) => a + b, 0), height: headerHeight + (table.rows.length + (averageKeys ? 1 : 0)) * rowHeight }
 }
 
 module.exports = { buildTableView }

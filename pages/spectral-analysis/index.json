@@ -1,4 +1,4 @@
 {
   "navigationBarTitleText": "光谱定性分析",
-  "usingComponents": {}
+  "usingComponents": { "scientific-text": "/components/scientific-text/index", "scientific-input": "/components/scientific-input/index" }
 }

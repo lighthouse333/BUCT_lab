@@ -33,6 +33,7 @@ function createForm(experimentId) {
     experiment: { id: experiment.id, name: experiment.name, category: experiment.category },
     note: definition.note,
     source: definition.source,
+    reportBasis: definition.reportBasis,
     introSections: definition.introSections || [],
     derivedParameters: (definition.derivedParameters || []).map(item => ({ ...item, value: '待填写支杆位置' })),
     observationOnly: !!definition.observationOnly,
@@ -63,6 +64,7 @@ function createForm(experimentId) {
 function validateField(field) {
   const value = field.value.trim()
   if (!value) return field.optional ? '' : '请填写此项'
+  if (field.fixedValue != null && value !== String(field.fixedValue)) return '本实验固定为 ' + field.fixedValue
   if (field.kind !== 'number') return ''
   // 不把空值、十六进制或 Infinity 当作测量数值；保留原始输入的小数位。
   if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(value) || !Number.isFinite(Number(value))) return '请输入有效数值'
@@ -107,13 +109,13 @@ function deriveParameters(parameters, fields) {
   })
 }
 
-// 未来计算接口可直接使用此结构；所有原始值仍为字符串，不含处理列。
+// 报告处理表的测量输入。计算列与纯派生表不进入输入快照，防止回传旧结果。
 function collectInput(form) {
   return {
-    experimentId: form.experiment.id, schemaVersion: 2, templateVersion: '2026-10-22', mode: form.mode,
+    experimentId: form.experiment.id, schemaVersion: 3, templateVersion: '2026-10-28-report', mode: form.mode,
     info: toObject(form.info.map(field => [field.key, field.value])),
     parameters: toObject(form.parameters.filter(field => field.visible !== false).map(field => [field.key, field.value])),
-    tables: form.tables.filter(item => item.visible).map(item => ({
+    tables: form.tables.filter(item => item.visible && item.columns.some(c => c.kind === 'number' || c.kind === 'text')).map(item => ({
       id: item.id,
       rows: item.rows.filter(row => !item.skipEmptyRows || !isEmptyRow(row)).map(row => toObject(row.cells.filter(cell => cell.kind !== 'computed' && !cell.template).map(cell => [cell.key, cell.value]))),
     })),

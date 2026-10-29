@@ -1,0 +1,5 @@
+:host { display: inline; }
+.scientific-text { font-size: inherit; color: inherit; line-height: inherit; white-space: inherit; overflow-wrap: anywhere; }
+.notation-sub, .notation-sup { position: relative; display: inline; font-size: .72em; line-height: 0; }
+.notation-sub { top: .3em; }
+.notation-sup { top: -.5em; }

@@ -1,0 +1,1 @@
+<text class="scientific-text text-class" selectable="{{selectable}}"><text wx:for="{{segments}}" wx:key="id" class="notation-{{item.kind}}">{{item.text}}</text></text>
