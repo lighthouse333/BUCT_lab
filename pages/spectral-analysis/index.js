@@ -1,4 +1,6 @@
 const { calculateGroup, statistics, propagateWavelength } = require('../../utils/spectral-analysis')
+const { collectSpectralInput } = require('../../utils/experiment-report')
+const { openReport } = require('../../utils/report-navigation')
 const fields = ['minusLeft', 'minusRight', 'plusLeft', 'plusRight']
 const fmt = value => value == null ? '—' : Number(value.toPrecision(8)).toString()
 const angle = value => {
@@ -15,6 +17,7 @@ Page({
     studentClass: '', studentName: '', studentId: '', teacher: '', lineName: '',
     density: '300', relativeGratingUncertainty: '0.1', angularInstrumentUncertainty: '',
     reference: '', observedPhenomenon: '', elementAnalysis: '', result: null, message: '', parameterError: '',
+    calculating: false,
   },
   onLoad() { this.recalculate() },
   onInfoInput(e) {
@@ -114,5 +117,14 @@ Page({
       ...this.data.rows.filter(row => row.warning).map(row => `${row.label}：${row.warning}`),
     ].filter(Boolean).join('\n')
     wx.setClipboardData({ data: text })
+  },
+  onStartCalculation() {
+    if (this.data.calculating) return
+    this.recalculate()
+    if (!this.data.result || this.data.parameterError || !this.data.density.trim()) {
+      wx.showToast({ title: '请先补齐并检查原始读数和光栅参数', icon: 'none' })
+      return
+    }
+    openReport(this, collectSpectralInput(this.data))
   },
 })

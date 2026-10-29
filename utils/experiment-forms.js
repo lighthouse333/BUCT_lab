@@ -1,4 +1,5 @@
-// 原始PDF和记录图，2026-10-22。输入保持原始字符串，处理结果不覆盖读数。
+// 基础测量字段。文件末尾由report-form-templates按实验报告处理表确定最终结构。
+// 测量输入保持原始字符串，自动计算格只读，处理结果不覆盖测量值。
 const number = (key, label, options = {}) => ({ key, label, kind: 'number', width: 180, ...options })
 const fixed = (key, label, width = 110) => ({ key, label, kind: 'fixed', width })
 const computed = (key, label) => ({ key, label, kind: 'computed', width: 180 })
@@ -99,10 +100,9 @@ const definitions = {
     tables: [table('quarter-wave-plate', '改变λ/4片光轴方向转动检偏器观察光强的变化', [fixed('nominalAngle', '波片光轴（OA）的角度'), number('actualAngle', 'OA的实际角度'), text('brightAxes', '最亮时Q与A的光轴关系'), text('darkAxes', '最暗或消光时Q与A的光轴关系')], [0, 15, 30, 45, 60, 75, 90].map(angle => [String(angle)]), { layout: { type: 'polarization' }, fixedCells: { '3:2': '—', '3:3': '—' } })],
   },
   'single-slit': {
-    source: '原始PDF第16–18页', note: '先记录衍射距离及光强扫描。暗纹位置在后续处理时由分布图确定，取一次k值计算。原件没有固定50点或5级的要求。',
-    parameters: [parameter('slitWidth', '单缝宽度 a/mm', '', { positive: true }), parameter('distanceLimit', 'Δz/cm', '0.05', { positive: true }), parameter('positionLimit', 'Δx_k/mm', '0.004', { positive: true })],
-    tables: [table('distances', '衍射距离z的测量数据', [fixed('number', '次序'), number('z', 'z/cm', { positive: true })], sequence(3), { layout: horizontal(['z'], { average: true }) }),
-      table('intensity-scan', '单缝衍射的光强的测量数据', [serial(), number('position', '探头的水平位置/mm'), number('intensity', '光强值/mV')], sequence(3), { adjustable: true, maxRows: 200, skipEmptyRows: true, layout: vertical(), hint: '按实际测量增加记录；未使用的全空行不计入数据，半填行仍须补齐。' })],
+    source: '原始PDF第16–18页；用户确认固定第3级', note: '暗纹位置由光强分布图确定，按实验要求使用左右第3级暗纹计算。',
+    parameters: [parameter('slitWidth', '单缝宽度 a/mm', '', { positive: true }), parameter('distanceLimit', 'Δz/cm', '0.05', { positive: true }), parameter('positionLimit', 'Δxₖ/mm', '0.004', { positive: true })],
+    tables: [table('distances', '衍射距离z的测量数据', [fixed('number', '次序'), number('z', 'z/cm', { positive: true })], sequence(3), { layout: horizontal(['z'], { average: true }) })],
   },
   'pn-junction': {
     source: 'PN结原始PDF第1–3页', note: '恒温表保留20个电压点，恒流表按实际温度测量增加记录。ln[I_F/μA]属于后续报告处理表。',
@@ -130,4 +130,5 @@ const definitions = {
       table('observations', '实验现象与分析', [fixed('item', '项目', 400), text('analysis', '在实验报告中详述', { width: 650 })], [['一、等倾干涉现象变化特点及分析'], ['三、单色光等厚干涉条纹的变化情况及特点'], ['四、白光的等厚干涉彩色条纹的形状及颜色分布']], { unnumbered: true, layout: { type: 'records' } })],
   },
 }
+require('./report-form-templates').applyReportTemplates(definitions, { number, fixed, computed, text, parameter, serial, sequence, table, horizontal, vertical })
 module.exports = { definitions }

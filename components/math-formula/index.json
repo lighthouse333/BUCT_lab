@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "scientific-text": "/components/scientific-text/index"
+  }
+}

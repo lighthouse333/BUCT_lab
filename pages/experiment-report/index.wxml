@@ -1,0 +1,122 @@
+<view class="page">
+  <view wx:if="{{loadError}}" class="card">
+    <scientific-text text-class="error" value="{{loadError}}" />
+    <button class="primary" bindtap="onBack">返回实验表格</button>
+  </view>
+  <block wx:elif="{{loaded}}">
+    <text class="eyebrow">BUCT LAB · 实验报告数据</text>
+    <scientific-text text-class="title" value="{{title}}" />
+    <view wx:if="{{summary}}" class="notice status-{{summary.status}}">
+      <scientific-text text-class="notice-title" value="{{summary.statusTitle}}" />
+      <scientific-text value="{{summary.kind === 'observation' ? '本实验无需数值处理，请依据实际观察完成现象分析。' : '以下数据用于撰写实验报告，实际操作步骤、结果分析和规定的手绘内容仍须完成。'}}" />
+    </view>
+    <scientific-text wx:if="{{calculationError}}" text-class="error" value="{{calculationError}}" />
+    <view class="card writing-note">
+      <text class="section-title">单位与书写</text>
+      <scientific-text wx:if="{{summary}}" text-class="unit-note" value="{{summary.unitNote}}" />
+      <text class="hint">结果与不确定度使用同一单位。不确定度保留2位有效数字，结果末位对齐，采用五凑偶修约。</text>
+    </view>
+    <block wx:if="{{summary}}">
+      <view wx:if="{{summary.issues.length}}" class="card">
+        <text class="section-title">需要核对或补充</text>
+        <view wx:for="{{summary.issues}}" wx:key="id" class="issue-item">
+          <scientific-text text-class="issue-location" value="{{item.where}}" /><scientific-text text-class="{{item.severity === 'error' ? 'error' : 'warning'}}" value="{{item.message}}" />
+        </view>
+        <text class="hint">缺少的尺寸、读数或仪器误差请返回实验表格核对。部分结果不能作为完整的实验结论。</text>
+      </view>
+      <view wx:if="{{summary.results.length}}" class="results-section">
+        <view class="results-heading"><text class="section-title">计算结果</text><text class="results-count">{{summary.results.length}} 项</text></view>
+        <view wx:for="{{summary.results}}" wx:key="id" class="card result-card">
+          <view class="result-heading"><scientific-text text-class="result-label" value="{{item.label}}" /><text wx:if="{{item.method}}" class="method-tag">{{item.method}}</text></view>
+          <view class="result-main"><scroll-view scroll-x class="math-scroll"><math-formula expression="{{item.valueMath}}" large /></scroll-view></view>
+          <view wx:if="{{item.relativeUncertainty || item.percentDifference}}" class="result-badges">
+            <view wx:if="{{item.relativeUncertainty}}" class="result-badge"><text>相对不确定度</text><scientific-text value="{{item.relativeUncertainty}}" /></view>
+            <view wx:if="{{item.percentDifference}}" class="result-badge"><text>百分差</text><scientific-text value="{{item.percentDifference}}" /></view>
+          </view>
+          <scientific-text wx:if="{{item.selectionNote}}" text-class="hint" value="{{item.selectionNote}}" />
+          <scientific-text wx:if="{{item.uncertaintyNote}}" text-class="warning" value="{{item.uncertaintyNote}}" />
+          <button class="details-toggle" data-index="{{index}}" bindtap="onToggleResult"><text>{{item.expanded ? '收起公式与计算过程' : '查看公式与计算过程'}}</text><text>{{item.expanded ? '−' : '+'}}</text></button>
+          <view wx:if="{{item.expanded}}" class="calculation-details">
+            <view class="detail-section"><text class="detail-title">计算公式</text><scroll-view scroll-x class="math-scroll"><math-formula expression="{{item.formulaMath}}" compact /></scroll-view></view>
+            <view wx:if="{{item.comparisonMath}}" class="detail-section">
+              <text class="detail-title">与参考值比较</text><scientific-text text-class="hint" value="{{item.comparison}}" />
+              <scroll-view scroll-x class="math-scroll"><math-formula expression="{{item.comparisonMath}}" compact /></scroll-view>
+              <scroll-view scroll-x class="math-scroll"><math-formula expression="{{item.comparisonSubstitution}}" compact /></scroll-view>
+            </view>
+            <view wx:if="{{item.uncertaintyMath}}" class="detail-section">
+              <text class="detail-title">不确定度计算</text>
+              <scientific-text text-class="process-reason" value="{{item.uncertaintyMath.reason}}" />
+              <view wx:if="{{item.uncertaintyMath.facts.length}}" class="fact-list"><view wx:for="{{item.uncertaintyMath.facts}}" wx:for-item="fact" wx:key="*this" class="fact-line"><scientific-text value="{{fact}}" /></view></view>
+              <view wx:for="{{item.uncertaintyMath.steps}}" wx:for-item="step" wx:for-index="stepIndex" wx:key="id" class="calculation-step">
+                <view class="step-heading"><text class="step-number">{{stepIndex + 1}}</text><scientific-text text-class="step-title" value="{{step.title}}" /></view>
+                <scroll-view wx:for="{{step.formulas}}" wx:for-item="equation" wx:key="source" scroll-x class="equation-line"><math-formula expression="{{equation.math}}" compact /></scroll-view>
+                <block wx:if="{{step.substitutions.length}}"><text class="equation-caption">数值代入</text><scroll-view wx:for="{{step.substitutions}}" wx:for-item="equation" wx:key="source" scroll-x class="equation-line"><math-formula expression="{{equation.math}}" compact /></scroll-view></block>
+                <scroll-view wx:if="{{step.result}}" scroll-x class="step-result"><math-formula expression="{{step.result.math}}" compact accent /></scroll-view>
+                <scientific-text wx:if="{{step.note}}" text-class="step-note" value="{{step.note}}" />
+              </view>
+              <view wx:if="{{item.uncertaintyMath.referenceFormulas.length}}" class="formula-reference"><scientific-text text-class="reference-title" value="{{item.uncertaintyMath.referenceTitle}}" /><scientific-text text-class="step-note" value="{{item.uncertaintyMath.referenceNote}}" /><scroll-view wx:for="{{item.uncertaintyMath.referenceFormulas}}" wx:for-item="equation" wx:key="source" scroll-x class="equation-line"><math-formula expression="{{equation.math}}" compact /></scroll-view></view>
+            </view>
+            <view wx:if="{{item.relativeUncertaintyMath}}" class="detail-section"><text class="detail-title">相对不确定度</text><scroll-view scroll-x class="equation-line"><math-formula expression="{{item.relativeUncertaintyMath}}" compact /></scroll-view><text class="equation-caption">数值代入</text><scroll-view scroll-x class="equation-line"><math-formula expression="{{item.relativeUncertaintySubstitution}}" compact /></scroll-view><scientific-text text-class="step-note" value="中间计算保留保护位，最终结果再按教材修约。" /></view>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{summary.graphSelections.length}}" class="card">
+        <text class="section-title">程序选取的图解点</text>
+        <view wx:for="{{summary.graphSelections}}" wx:key="id" class="graph-selection">
+          <scientific-text text-class="result-label" value="{{item.title}}" /><scientific-text text-class="hint" value="{{item.rule}}" />
+          <text wx:if="{{item.sourceRows}}" class="hint">局部曲线使用原始记录第 {{item.sourceRows}} 行。</text>
+          <view class="coordinate-row report-heading"><text>选点</text><text>x坐标</text><text>y坐标</text></view>
+          <view wx:for="{{item.points}}" wx:for-item="point" wx:key="label" class="coordinate-row"><scientific-text value="{{point.label}}" /><scientific-text value="{{point.x}}" /><scientific-text value="{{point.y}}" /></view>
+          <scientific-text text-class="hint" value="{{item.axes}}" />
+          <scroll-view scroll-x class="math-scroll"><math-formula expression="{{item.slopeMath}}" /></scroll-view>
+          <scroll-view scroll-x class="math-scroll"><math-formula expression="{{item.slopeSubstitution}}" /></scroll-view>
+          <scroll-view scroll-x class="math-scroll"><math-formula expression="{{item.interceptMath}}" /></scroll-view>
+        </view>
+      </view>
+      <view wx:for="{{summary.sourceTables}}" wx:for-item="table" wx:key="id" class="card table-card">
+        <scientific-text text-class="section-title" value="{{table.sourceNumber ? '表' + table.sourceNumber + ' ' : ''}}{{table.title}}" />
+        <text class="hint">按要求中的实验报告表格显示；左右滑动查看完整内容。</text>
+        <scroll-view scroll-x class="table-scroll">
+          <view class="source-table" style="width:{{table.width + 2}}rpx;height:{{table.height + 2}}rpx;">
+            <view wx:for="{{table.displayCells}}" wx:for-item="cell" wx:key="id" class="source-cell {{cell.heading ? 'source-heading' : ''}} {{cell.computed ? 'source-computed-cell' : ''}}" style="{{cell.style}}">
+              <view wx:if="{{cell.diagram}}" class="polar-diagram"><view class="diagram-axis horizontal-axis"></view><view class="diagram-axis vertical-axis"></view><view class="wave-shape {{cell.diagram}}"></view></view>
+              <view wx:elif="{{cell.parts}}" class="source-phenomenon"><scientific-text wx:for="{{cell.parts}}" wx:for-item="part" wx:key="index" text-class="phenomenon-line" value="{{part.text}}" /></view>
+              <view wx:elif="{{cell.corner}}" class="source-corner"><scientific-text value="{{cell.corner}}" /><scientific-text value="{{cell.content}}" /></view>
+              <scientific-text wx:else text-class="source-label" selectable value="{{cell.content}}" />
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+      <view wx:if="{{summary.charts.length}}" class="card">
+        <text class="section-title">作图数据</text>
+        <text class="hint">实测点、程序辅助趋势线和自动选点分别标注。实验要求手绘时，请按原要求完成。</text>
+        <button class="secondary" bindtap="onToggleCoordinates">{{showCoordinates ? '收起坐标' : '查看各图坐标'}}</button>
+        <block wx:if="{{showCoordinates}}">
+          <view wx:for="{{summary.charts}}" wx:for-item="chart" wx:key="id" class="chart-data">
+            <scientific-text text-class="section-title" value="{{chart.title}}" /><scientific-text text-class="hint" value="{{chart.instruction}}" />
+            <view wx:for="{{chart.series}}" wx:for-item="series" wx:key="id">
+              <scientific-text text-class="result-label" value="{{series.label}}" />
+              <view class="coordinate-row report-heading"><scientific-text value="{{chart.xLabel}}" /><scientific-text value="{{chart.yLabel}}" /></view>
+              <view wx:for="{{series.points}}" wx:for-item="point" wx:key="id" class="coordinate-row"><scientific-text selectable value="{{point.x}}" /><scientific-text selectable value="{{point.y}}" /></view>
+            </view>
+          </view>
+        </block>
+      </view>
+      <view wx:if="{{summary.assumptions.length}}" class="card"><text class="section-title">计算依据与量具信息</text><scientific-text wx:for="{{summary.assumptions}}" wx:key="*this" text-class="report-line" value="{{item}}" /></view>
+      <view wx:if="{{summary.observations.length}}" class="card"><text class="section-title">观察与分析记录</text><scientific-text wx:for="{{summary.observations}}" wx:key="id" text-class="report-line" selectable value="{{item.text}}" /></view>
+      <view class="card">
+        <text class="section-title">实验报告要求</text>
+        <scientific-text wx:for="{{summary.requirements.processing}}" wx:key="*this" text-class="report-line" value="{{item}}" />
+        <text class="section-title">仍需完成的报告内容</text><scientific-text wx:for="{{summary.tasks}}" wx:key="id" text-class="report-line" value="{{item.label}}" />
+        <text wx:if="{{summary.requirements.submission.length}}" class="section-title">提交要求</text><scientific-text wx:for="{{summary.requirements.submission}}" wx:key="*this" text-class="report-line" value="{{item}}" />
+        <scientific-text wx:for="{{summary.requirements.notes}}" wx:key="*this" text-class="hint" value="{{item}}" />
+      </view>
+    </block>
+    <view class="card">
+      <button class="primary" bindtap="onCopy" disabled="{{calculating || !summary || summary.status === 'invalid'}}">{{summary && summary.kind === 'observation' ? '复制整理后的实验记录' : '复制计算过程与报告数据'}}</button>
+      <button wx:if="{{calculationError}}" class="secondary" bindtap="onCalculate">重新计算</button>
+      <button class="secondary" bindtap="onBack">返回修改原始数据</button>
+      <text class="hint">返回后原表继续保留。关闭小程序后请以已复制的记录为准。</text>
+    </view>
+  </block>
+</view>

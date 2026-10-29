@@ -1,0 +1,4 @@
+<view class="number-control {{variant}} {{invalid ? 'invalid' : ''}}">
+  <view wx:if="{{scientific && !editing}}" class="number-display" bindtap="onBeginEdit" aria-role="button" aria-label="{{label + '，点击编辑'}}"><scientific-text value="{{value}}" /></view>
+  <input wx:else class="number-input" value="{{value}}" placeholder="{{placeholder}}" maxlength="{{maxlength}}" aria-label="{{label}}" bindfocus="onFocus" bindinput="onInput" bindblur="onBlur" focus="{{editing}}" />
+</view>

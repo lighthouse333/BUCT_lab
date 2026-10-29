@@ -1,9 +1,12 @@
 const { definitions } = require('../../utils/experiment-forms')
-const { createForm, makeRow, validateField, validateForm, formatInput, deriveParameters } = require('../../utils/experiment-input')
+const { createForm, makeRow, validateField, validateForm, collectInput, formatInput, deriveParameters } = require('../../utils/experiment-input')
 const { buildTableView } = require('../../utils/table-layout')
+const { openReport } = require('../../utils/report-navigation')
+const { refreshFormTables } = require('../../utils/report-tables')
+const { textbookOptions } = require('../../utils/textbook-profile')
 
 Page({
-  data: { experiment: null, loadError: '', parameters: [], tables: [], info: [], modes: [], mode: '', observationOnly: false, introSections: [], derivedParameters: [], reportRequirements: [], reportSubmission: [], checked: false, message: '', errorCount: 0 },
+  data: { experiment: null, loadError: '', parameters: [], tables: [], info: [], modes: [], mode: '', observationOnly: false, introSections: [], derivedParameters: [], reportRequirements: [], reportSubmission: [], checked: false, message: '', errorCount: 0, calculating: false },
 
   onLoad(options = {}) {
     const form = createForm(options.id)
@@ -12,7 +15,15 @@ Page({
       return
     }
     this.setData(form)
+    this.refreshCalculations()
     wx.setNavigationBarTitle({ title: form.experiment.name })
+  },
+
+  onShow() { if (this.data.experiment) this.refreshCalculations() },
+
+  refreshCalculations() {
+    const input = collectInput(this.data)
+    this.setData({ tables: refreshFormTables(this.data, textbookOptions(input)) })
   },
 
   onInfoInput(e) {
@@ -23,9 +34,10 @@ Page({
 
   onParameterInput(e) {
     const index = Number(e.currentTarget.dataset.index)
-    if (!Number.isInteger(index) || !this.data.parameters[index]) return
+    if (!Number.isInteger(index) || !this.data.parameters[index] || this.data.parameters[index].readOnly) return
     this.setData({ [`parameters[${index}].value`]: e.detail.value, [`parameters[${index}].error`]: '', checked: false, message: '', errorCount: 0 })
     this.setData({ derivedParameters: deriveParameters(this.data.parameters, this.data.derivedParameters) })
+    this.refreshCalculations()
   },
 
   onParameterBlur(e) {
@@ -48,6 +60,7 @@ Page({
     const target = this.findCell(e.currentTarget.dataset)
     if (!target) return
     this.setData({ [`${target.path}.value`]: e.detail.value, [`${target.path}.error`]: '', checked: false, message: '', errorCount: 0 })
+    this.refreshCalculations()
   },
 
   onCellBlur(e) {
@@ -64,6 +77,7 @@ Page({
       tables: this.data.tables.map(item => ({ ...item, visible: !item.modes.length || item.modes.includes(mode), scrollTarget: '' })),
       checked: false, message: '', errorCount: 0,
     })
+    this.refreshCalculations()
   },
 
   onAddRow(e) {
@@ -73,6 +87,7 @@ Page({
     const definition = definitions[this.data.experiment.id].tables[index]
     const next = { ...table, rows: table.rows.concat(makeRow(definition, index, table.rows.length)) }
     this.setData({ [`tables[${index}]`]: { ...next, ...buildTableView(next, index) }, checked: false, message: '', errorCount: 0 })
+    this.refreshCalculations()
   },
 
   onRemoveRow(e) {
@@ -82,6 +97,7 @@ Page({
     const remove = () => {
       const next = { ...table, rows: table.rows.slice(0, -1) }
       this.setData({ [`tables[${index}]`]: { ...next, ...buildTableView(next, index) }, checked: false, message: '', errorCount: 0 })
+      this.refreshCalculations()
     }
     const last = table.rows[table.rows.length - 1]
     if (last.cells.some(cell => cell.kind !== 'fixed' && cell.kind !== 'computed' && cell.value.trim())) {
@@ -112,11 +128,21 @@ Page({
     wx.setClipboardData({ data: formatInput(this.data) })
   },
 
+  onStartCalculation() {
+    if (this.data.calculating || !this.data.experiment) return
+    this.onCheck()
+    if (this.data.errorCount) {
+      wx.showToast({ title: '请先补齐或修正标红的数据', icon: 'none' })
+      return
+    }
+    openReport(this, collectInput(this.data))
+  },
+
   onReset() {
     wx.showModal({
       title: '恢复空白模板？',
       content: '这会清空实验信息及所有方案的已填读数，并恢复模板参数和测量点。',
-      success: res => { if (res.confirm) this.setData(createForm(this.data.experiment.id)) },
+      success: res => { if (res.confirm) { this.setData(createForm(this.data.experiment.id)); this.refreshCalculations() } },
     })
   },
 

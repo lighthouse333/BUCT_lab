@@ -1,0 +1,1555 @@
+{
+  "reportSchemaVersion": 2,
+  "formulaVersion": "2026-10-28-report",
+  "inputSchemaVersion": 3,
+  "experiment": {
+    "id": "young-modulus",
+    "name": "拉伸法测量金属丝的杨氏模量",
+    "category": "力学"
+  },
+  "status": "complete",
+  "kind": "quantitative",
+  "reportReady": true,
+  "reportFinished": false,
+  "info": {
+    "studentClass": "",
+    "studentName": "",
+    "studentId": "",
+    "date": "",
+    "teacher": ""
+  },
+  "rawInput": {
+    "experimentId": "young-modulus",
+    "schemaVersion": 3,
+    "templateVersion": "2026-10-28-report",
+    "mode": "",
+    "info": {
+      "studentClass": "",
+      "studentName": "",
+      "studentId": "",
+      "date": "",
+      "teacher": ""
+    },
+    "parameters": {
+      "wireLength": "100",
+      "division": "1",
+      "micrometerZero": "0.01",
+      "diameterLimit": "0.004",
+      "gravity": "10",
+      "leverDistanceM": "1",
+      "leverArmM": "0.1",
+      "extensionLimitMm": "0.01",
+      "leverDistanceLimitM": "0.001",
+      "leverArmLimitM": "0.0001"
+    },
+    "tables": [
+      {
+        "id": "loading",
+        "rows": [
+          {
+            "number": "1",
+            "mass": "0",
+            "loading": "0.000",
+            "unloading": "0.000"
+          },
+          {
+            "number": "2",
+            "mass": "100",
+            "loading": "0.200",
+            "unloading": "0.200"
+          },
+          {
+            "number": "3",
+            "mass": "200",
+            "loading": "0.400",
+            "unloading": "0.400"
+          },
+          {
+            "number": "4",
+            "mass": "300",
+            "loading": "0.600",
+            "unloading": "0.600"
+          },
+          {
+            "number": "5",
+            "mass": "400",
+            "loading": "0.800",
+            "unloading": "0.800"
+          },
+          {
+            "number": "6",
+            "mass": "500",
+            "loading": "1.000",
+            "unloading": "1.000"
+          },
+          {
+            "number": "7",
+            "mass": "600",
+            "loading": "1.200",
+            "unloading": "1.200"
+          },
+          {
+            "number": "8",
+            "mass": "700",
+            "loading": "1.400",
+            "unloading": "1.400"
+          },
+          {
+            "number": "9",
+            "mass": "800",
+            "loading": "1.600",
+            "unloading": "1.600"
+          },
+          {
+            "number": "10",
+            "mass": "900",
+            "loading": "1.800",
+            "unloading": "1.800"
+          }
+        ]
+      },
+      {
+        "id": "diameters",
+        "rows": [
+          {
+            "number": "1",
+            "diameter": "2.01"
+          },
+          {
+            "number": "2",
+            "diameter": "2.01"
+          },
+          {
+            "number": "3",
+            "diameter": "2.01"
+          },
+          {
+            "number": "4",
+            "diameter": "2.01"
+          },
+          {
+            "number": "5",
+            "diameter": "2.01"
+          }
+        ]
+      }
+    ]
+  },
+  "processingOptions": {
+    "uncertaintyPolicy": "course",
+    "coverageFactor": 2,
+    "autoGraph": true,
+    "limits": {
+      "extensionMm": "0.01",
+      "diameterMm": "0.004",
+      "leverDistanceM": "0.001",
+      "leverArmM": "0.0001"
+    },
+    "extensionModel": "optical-lever",
+    "leverDistanceM": "1",
+    "leverArmM": "0.1"
+  },
+  "assumptions": [
+    "按教材光杠杆公式计算杨氏模量，使用实测镜尺距离D和光杠杆常数b。",
+    "外力按原件作为给定量；质量g换kg后计算。直径误差限应包含所采用零点修正的误差预算。"
+  ],
+  "issues": [],
+  "results": [
+    {
+      "id": "extension",
+      "label": "平均标尺位移差",
+      "value": 0.001,
+      "unit": "m",
+      "formula": "x̄=Σxᵢ/n",
+      "uncertainty": {
+        "complete": true,
+        "combined": 0.00001,
+        "known": 0.00001,
+        "expanded": null,
+        "reported": 0.00001,
+        "coverageFactor": 1,
+        "policy": "course",
+        "components": [
+          {
+            "name": "A类项",
+            "sensitivity": 0.001,
+            "u": 0
+          },
+          {
+            "name": "仪器项",
+            "sensitivity": 0.001,
+            "u": 0.01
+          }
+        ],
+        "missing": [],
+        "a": 0,
+        "b": 0.00001,
+        "tp": 1.14,
+        "instrumentLimit": 0.00001,
+        "singleMeasurementRule": true
+      },
+      "statistics": {
+        "n": 5,
+        "mean": 1,
+        "variance": 0,
+        "sd": 0,
+        "sem": 0,
+        "min": 1,
+        "max": 1,
+        "sumSquaredDeviations": 0,
+        "threeSigmaThreshold": 0,
+        "deviations": [
+          {
+            "index": 1,
+            "value": 1,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          },
+          {
+            "index": 2,
+            "value": 1,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          },
+          {
+            "index": 3,
+            "value": 1,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          },
+          {
+            "index": 4,
+            "value": 1,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          },
+          {
+            "index": 5,
+            "value": 1,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          }
+        ],
+        "uncertainty": {
+          "complete": true,
+          "combined": 0.01,
+          "known": 0.01,
+          "expanded": null,
+          "reported": 0.01,
+          "coverageFactor": 1,
+          "policy": "course",
+          "components": [
+            {
+              "name": "A类项",
+              "sensitivity": 1,
+              "u": 0
+            },
+            {
+              "name": "仪器项",
+              "sensitivity": 1,
+              "u": 0.01
+            }
+          ],
+          "missing": [],
+          "a": 0,
+          "b": 0.01,
+          "tp": 1.14,
+          "instrumentLimit": 0.01,
+          "singleMeasurementRule": true
+        },
+        "inputToOutputScale": 0.001,
+        "outputUnit": "m"
+      },
+      "inputs": {
+        "count": 5,
+        "instrumentLimit": 0.01,
+        "inputToOutputScale": 0.001
+      },
+      "display": "0.001 m",
+      "formatted": {
+        "value": "1.000",
+        "uncertainty": "0.010",
+        "unit": "mm",
+        "expression": "(1.000 ± 0.010) mm",
+        "scale": 1000,
+        "sourceUnit": "m"
+      }
+    },
+    {
+      "id": "diameter",
+      "label": "平均钢丝直径",
+      "value": 0.0019999999999999996,
+      "unit": "m",
+      "formula": "x̄=Σxᵢ/n",
+      "uncertainty": {
+        "complete": true,
+        "combined": 0.000004,
+        "known": 0.000004,
+        "expanded": null,
+        "reported": 0.000004,
+        "coverageFactor": 1,
+        "policy": "course",
+        "components": [
+          {
+            "name": "A类项",
+            "sensitivity": 0.001,
+            "u": 0
+          },
+          {
+            "name": "仪器项",
+            "sensitivity": 0.001,
+            "u": 0.004
+          }
+        ],
+        "missing": [],
+        "a": 0,
+        "b": 0.000004,
+        "tp": 1.14,
+        "instrumentLimit": 0.000004,
+        "singleMeasurementRule": true
+      },
+      "statistics": {
+        "n": 5,
+        "mean": 1.9999999999999998,
+        "variance": 0,
+        "sd": 0,
+        "sem": 0,
+        "min": 1.9999999999999998,
+        "max": 1.9999999999999998,
+        "sumSquaredDeviations": 0,
+        "threeSigmaThreshold": 0,
+        "deviations": [
+          {
+            "index": 1,
+            "value": 1.9999999999999998,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          },
+          {
+            "index": 2,
+            "value": 1.9999999999999998,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          },
+          {
+            "index": 3,
+            "value": 1.9999999999999998,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          },
+          {
+            "index": 4,
+            "value": 1.9999999999999998,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          },
+          {
+            "index": 5,
+            "value": 1.9999999999999998,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          }
+        ],
+        "uncertainty": {
+          "complete": true,
+          "combined": 0.004,
+          "known": 0.004,
+          "expanded": null,
+          "reported": 0.004,
+          "coverageFactor": 1,
+          "policy": "course",
+          "components": [
+            {
+              "name": "A类项",
+              "sensitivity": 1,
+              "u": 0
+            },
+            {
+              "name": "仪器项",
+              "sensitivity": 1,
+              "u": 0.004
+            }
+          ],
+          "missing": [],
+          "a": 0,
+          "b": 0.004,
+          "tp": 1.14,
+          "instrumentLimit": 0.004,
+          "singleMeasurementRule": true
+        },
+        "inputToOutputScale": 0.001,
+        "outputUnit": "m"
+      },
+      "inputs": {
+        "count": 5,
+        "instrumentLimit": 0.004,
+        "inputToOutputScale": 0.001
+      },
+      "display": "0.002 m",
+      "formatted": {
+        "value": "2.0000",
+        "uncertainty": "0.0040",
+        "unit": "mm",
+        "expression": "(2.0000 ± 0.0040) mm",
+        "scale": 1000,
+        "sourceUnit": "m"
+      }
+    },
+    {
+      "id": "length",
+      "label": "钢丝原长",
+      "value": 1,
+      "unit": "m",
+      "formula": "x̄=Σxᵢ/n",
+      "uncertainty": {
+        "complete": true,
+        "combined": 0.0005,
+        "known": 0.0005,
+        "expanded": null,
+        "reported": 0.0005,
+        "coverageFactor": 1,
+        "policy": "course",
+        "components": [
+          {
+            "name": "A类项",
+            "sensitivity": 0.01,
+            "u": 0
+          },
+          {
+            "name": "仪器项",
+            "sensitivity": 0.01,
+            "u": 0.05
+          }
+        ],
+        "missing": [],
+        "a": 0,
+        "b": 0.0005,
+        "tp": null,
+        "instrumentLimit": 0.0005,
+        "singleMeasurementRule": true
+      },
+      "statistics": {
+        "n": 1,
+        "mean": 100,
+        "variance": null,
+        "sd": null,
+        "sem": null,
+        "min": 100,
+        "max": 100,
+        "sumSquaredDeviations": 0,
+        "threeSigmaThreshold": null,
+        "deviations": [
+          {
+            "index": 1,
+            "value": 100,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          }
+        ],
+        "uncertainty": {
+          "complete": true,
+          "combined": 0.05,
+          "known": 0.05,
+          "expanded": null,
+          "reported": 0.05,
+          "coverageFactor": 1,
+          "policy": "course",
+          "components": [
+            {
+              "name": "A类项",
+              "sensitivity": 1,
+              "u": 0
+            },
+            {
+              "name": "仪器项",
+              "sensitivity": 1,
+              "u": 0.05
+            }
+          ],
+          "missing": [],
+          "a": 0,
+          "b": 0.05,
+          "tp": null,
+          "instrumentLimit": 0.05,
+          "singleMeasurementRule": true
+        },
+        "inputToOutputScale": 0.01,
+        "outputUnit": "m"
+      },
+      "inputs": {
+        "count": 1,
+        "instrumentLimit": 0.05,
+        "inputToOutputScale": 0.01
+      },
+      "display": "1 m",
+      "formatted": {
+        "value": "100.000",
+        "uncertainty": "0.050",
+        "unit": "cm",
+        "expression": "(100.000 ± 0.050) cm",
+        "scale": 100,
+        "sourceUnit": "m"
+      }
+    },
+    {
+      "id": "lever-distance",
+      "label": "镜面到标尺距离",
+      "value": 1,
+      "unit": "m",
+      "formula": "x̄=Σxᵢ/n",
+      "uncertainty": {
+        "complete": true,
+        "combined": 0.001,
+        "known": 0.001,
+        "expanded": null,
+        "reported": 0.001,
+        "coverageFactor": 1,
+        "policy": "course",
+        "components": [
+          {
+            "name": "A类项",
+            "sensitivity": 1,
+            "u": 0
+          },
+          {
+            "name": "仪器项",
+            "sensitivity": 1,
+            "u": 0.001
+          }
+        ],
+        "missing": [],
+        "a": 0,
+        "b": 0.001,
+        "tp": null,
+        "instrumentLimit": 0.001,
+        "singleMeasurementRule": true
+      },
+      "statistics": {
+        "n": 1,
+        "mean": 1,
+        "variance": null,
+        "sd": null,
+        "sem": null,
+        "min": 1,
+        "max": 1,
+        "sumSquaredDeviations": 0,
+        "threeSigmaThreshold": null,
+        "deviations": [
+          {
+            "index": 1,
+            "value": 1,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          }
+        ],
+        "uncertainty": {
+          "complete": true,
+          "combined": 0.001,
+          "known": 0.001,
+          "expanded": null,
+          "reported": 0.001,
+          "coverageFactor": 1,
+          "policy": "course",
+          "components": [
+            {
+              "name": "A类项",
+              "sensitivity": 1,
+              "u": 0
+            },
+            {
+              "name": "仪器项",
+              "sensitivity": 1,
+              "u": 0.001
+            }
+          ],
+          "missing": [],
+          "a": 0,
+          "b": 0.001,
+          "tp": null,
+          "instrumentLimit": 0.001,
+          "singleMeasurementRule": true
+        },
+        "inputToOutputScale": 1,
+        "outputUnit": "m"
+      },
+      "inputs": {
+        "count": 1,
+        "instrumentLimit": 0.001,
+        "inputToOutputScale": 1
+      },
+      "display": "1 m",
+      "formatted": {
+        "value": "1.0000",
+        "uncertainty": "0.0010",
+        "unit": "m",
+        "expression": "(1.0000 ± 0.0010) m",
+        "scale": 1,
+        "sourceUnit": "m"
+      }
+    },
+    {
+      "id": "lever-arm",
+      "label": "光杠杆臂长",
+      "value": 0.1,
+      "unit": "m",
+      "formula": "x̄=Σxᵢ/n",
+      "uncertainty": {
+        "complete": true,
+        "combined": 0.0001,
+        "known": 0.0001,
+        "expanded": null,
+        "reported": 0.0001,
+        "coverageFactor": 1,
+        "policy": "course",
+        "components": [
+          {
+            "name": "A类项",
+            "sensitivity": 1,
+            "u": 0
+          },
+          {
+            "name": "仪器项",
+            "sensitivity": 1,
+            "u": 0.0001
+          }
+        ],
+        "missing": [],
+        "a": 0,
+        "b": 0.0001,
+        "tp": null,
+        "instrumentLimit": 0.0001,
+        "singleMeasurementRule": true
+      },
+      "statistics": {
+        "n": 1,
+        "mean": 0.1,
+        "variance": null,
+        "sd": null,
+        "sem": null,
+        "min": 0.1,
+        "max": 0.1,
+        "sumSquaredDeviations": 0,
+        "threeSigmaThreshold": null,
+        "deviations": [
+          {
+            "index": 1,
+            "value": 0.1,
+            "deviation": 0,
+            "squaredDeviation": 0,
+            "exceedsThreeSigma": false
+          }
+        ],
+        "uncertainty": {
+          "complete": true,
+          "combined": 0.0001,
+          "known": 0.0001,
+          "expanded": null,
+          "reported": 0.0001,
+          "coverageFactor": 1,
+          "policy": "course",
+          "components": [
+            {
+              "name": "A类项",
+              "sensitivity": 1,
+              "u": 0
+            },
+            {
+              "name": "仪器项",
+              "sensitivity": 1,
+              "u": 0.0001
+            }
+          ],
+          "missing": [],
+          "a": 0,
+          "b": 0.0001,
+          "tp": null,
+          "instrumentLimit": 0.0001,
+          "singleMeasurementRule": true
+        },
+        "inputToOutputScale": 1,
+        "outputUnit": "m"
+      },
+      "inputs": {
+        "count": 1,
+        "instrumentLimit": 0.0001,
+        "inputToOutputScale": 1
+      },
+      "display": "0.1 m",
+      "formatted": {
+        "value": "0.10000",
+        "uncertainty": "0.00010",
+        "unit": "m",
+        "expression": "(0.10000 ± 0.00010) m",
+        "scale": 1,
+        "sourceUnit": "m"
+      }
+    },
+    {
+      "id": "youngModulus",
+      "label": "杨氏模量",
+      "value": 31830988618.379086,
+      "unit": "Pa",
+      "formula": "E=8FLD/(πd²bC)",
+      "uncertainty": {
+        "complete": true,
+        "combined": 346139133.3800103,
+        "known": 346139133.3800103,
+        "expanded": 692278266.7600206,
+        "reported": 692278266.7600206,
+        "coverageFactor": 2,
+        "policy": "course",
+        "components": [
+          {
+            "name": "原长",
+            "sensitivity": 31830988618.379086,
+            "u": 0.0005
+          },
+          {
+            "name": "直径",
+            "sensitivity": -31830988618379.09,
+            "u": 0.000004
+          },
+          {
+            "name": "逐差位移",
+            "sensitivity": -31830988618379.086,
+            "u": 0.00001
+          },
+          {
+            "name": "镜尺距离",
+            "sensitivity": 31830988618.379086,
+            "u": 0.001
+          },
+          {
+            "name": "光杠杆臂长",
+            "sensitivity": -318309886183.79083,
+            "u": 0.0001
+          }
+        ],
+        "missing": []
+      },
+      "reference": 200000000000,
+      "inputs": {
+        "forceN": 5,
+        "lengthM": 1,
+        "diameterM": 0.0019999999999999996,
+        "displacementM": 0.001,
+        "opticalAmplification": 20
+      },
+      "display": "31830988620 Pa",
+      "percentDifference": 84.08450569081045,
+      "formatted": {
+        "value": "3.183",
+        "uncertainty": "0.069",
+        "exponent": 10,
+        "unit": "Pa",
+        "expression": "(3.183 ± 0.069) × 10¹⁰ Pa",
+        "scale": 1,
+        "sourceUnit": "Pa"
+      }
+    }
+  ],
+  "tables": [
+    {
+      "id": "loading-mean",
+      "title": "加载卸载平均读数",
+      "columns": [
+        {
+          "key": "sourceRow",
+          "label": "序号",
+          "unit": ""
+        },
+        {
+          "key": "mass",
+          "label": "质量",
+          "unit": "g"
+        },
+        {
+          "key": "loading",
+          "label": "加载",
+          "unit": "mm"
+        },
+        {
+          "key": "unloading",
+          "label": "卸载",
+          "unit": "mm"
+        },
+        {
+          "key": "average",
+          "label": "平均标尺读数",
+          "unit": "mm"
+        }
+      ],
+      "rows": [
+        {
+          "sourceRow": 1,
+          "mass": 0,
+          "loading": 0,
+          "unloading": 0,
+          "average": 0
+        },
+        {
+          "sourceRow": 2,
+          "mass": 100,
+          "loading": 0.2,
+          "unloading": 0.2,
+          "average": 0.2
+        },
+        {
+          "sourceRow": 3,
+          "mass": 200,
+          "loading": 0.4,
+          "unloading": 0.4,
+          "average": 0.4
+        },
+        {
+          "sourceRow": 4,
+          "mass": 300,
+          "loading": 0.6,
+          "unloading": 0.6,
+          "average": 0.6
+        },
+        {
+          "sourceRow": 5,
+          "mass": 400,
+          "loading": 0.8,
+          "unloading": 0.8,
+          "average": 0.8
+        },
+        {
+          "sourceRow": 6,
+          "mass": 500,
+          "loading": 1,
+          "unloading": 1,
+          "average": 1
+        },
+        {
+          "sourceRow": 7,
+          "mass": 600,
+          "loading": 1.2,
+          "unloading": 1.2,
+          "average": 1.2
+        },
+        {
+          "sourceRow": 8,
+          "mass": 700,
+          "loading": 1.4,
+          "unloading": 1.4,
+          "average": 1.4
+        },
+        {
+          "sourceRow": 9,
+          "mass": 800,
+          "loading": 1.6,
+          "unloading": 1.6,
+          "average": 1.6
+        },
+        {
+          "sourceRow": 10,
+          "mass": 900,
+          "loading": 1.8,
+          "unloading": 1.8,
+          "average": 1.8
+        }
+      ]
+    },
+    {
+      "id": "differences",
+      "title": "五组逐差",
+      "columns": [
+        {
+          "key": "pair",
+          "label": "配对",
+          "unit": ""
+        },
+        {
+          "key": "force",
+          "label": "外力差",
+          "unit": "N"
+        },
+        {
+          "key": "extension",
+          "label": "标尺位移差",
+          "unit": "mm"
+        }
+      ],
+      "rows": [
+        {
+          "pair": "1→6",
+          "force": 5,
+          "extension": 1
+        },
+        {
+          "pair": "2→7",
+          "force": 5,
+          "extension": 1
+        },
+        {
+          "pair": "3→8",
+          "force": 5,
+          "extension": 1
+        },
+        {
+          "pair": "4→9",
+          "force": 5,
+          "extension": 1
+        },
+        {
+          "pair": "5→10",
+          "force": 5,
+          "extension": 1
+        }
+      ]
+    },
+    {
+      "id": "diameter-corrected",
+      "title": "直径零点修正",
+      "columns": [
+        {
+          "key": "number",
+          "label": "序号",
+          "unit": ""
+        },
+        {
+          "key": "corrected",
+          "label": "修正直径",
+          "unit": "mm"
+        }
+      ],
+      "rows": [
+        {
+          "number": 1,
+          "corrected": 1.9999999999999998
+        },
+        {
+          "number": 2,
+          "corrected": 1.9999999999999998
+        },
+        {
+          "number": 3,
+          "corrected": 1.9999999999999998
+        },
+        {
+          "number": 4,
+          "corrected": 1.9999999999999998
+        },
+        {
+          "number": 5,
+          "corrected": 1.9999999999999998
+        }
+      ]
+    }
+  ],
+  "charts": [
+    {
+      "id": "loading",
+      "title": "加载卸载曲线",
+      "xAxis": {
+        "label": "质量",
+        "unit": "g"
+      },
+      "yAxis": {
+        "label": "标尺读数",
+        "unit": "mm"
+      },
+      "presentation": "computer",
+      "series": [
+        {
+          "type": "points",
+          "id": "loading",
+          "label": "加载",
+          "points": [
+            {
+              "x": 0,
+              "y": 0
+            },
+            {
+              "x": 100,
+              "y": 0.2
+            },
+            {
+              "x": 200,
+              "y": 0.4
+            },
+            {
+              "x": 300,
+              "y": 0.6
+            },
+            {
+              "x": 400,
+              "y": 0.8
+            },
+            {
+              "x": 500,
+              "y": 1
+            },
+            {
+              "x": 600,
+              "y": 1.2
+            },
+            {
+              "x": 700,
+              "y": 1.4
+            },
+            {
+              "x": 800,
+              "y": 1.6
+            },
+            {
+              "x": 900,
+              "y": 1.8
+            }
+          ]
+        },
+        {
+          "type": "points",
+          "id": "unloading",
+          "label": "卸载",
+          "points": [
+            {
+              "x": 0,
+              "y": 0
+            },
+            {
+              "x": 100,
+              "y": 0.2
+            },
+            {
+              "x": 200,
+              "y": 0.4
+            },
+            {
+              "x": 300,
+              "y": 0.6
+            },
+            {
+              "x": 400,
+              "y": 0.8
+            },
+            {
+              "x": 500,
+              "y": 1
+            },
+            {
+              "x": 600,
+              "y": 1.2
+            },
+            {
+              "x": 700,
+              "y": 1.4
+            },
+            {
+              "x": 800,
+              "y": 1.6
+            },
+            {
+              "x": 900,
+              "y": 1.8
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "id": "extension",
+      "label": "平均标尺位移差",
+      "formula": "x̄=Σxᵢ/n",
+      "value": 0.001,
+      "unit": "m",
+      "method": "formula",
+      "inputs": {
+        "count": 5,
+        "instrumentLimit": 0.01,
+        "inputToOutputScale": 0.001
+      }
+    },
+    {
+      "id": "diameter",
+      "label": "平均钢丝直径",
+      "formula": "x̄=Σxᵢ/n",
+      "value": 0.0019999999999999996,
+      "unit": "m",
+      "method": "formula",
+      "inputs": {
+        "count": 5,
+        "instrumentLimit": 0.004,
+        "inputToOutputScale": 0.001
+      }
+    },
+    {
+      "id": "length",
+      "label": "钢丝原长",
+      "formula": "x̄=Σxᵢ/n",
+      "value": 1,
+      "unit": "m",
+      "method": "formula",
+      "inputs": {
+        "count": 1,
+        "instrumentLimit": 0.05,
+        "inputToOutputScale": 0.01
+      }
+    },
+    {
+      "id": "lever-distance",
+      "label": "镜面到标尺距离",
+      "formula": "x̄=Σxᵢ/n",
+      "value": 1,
+      "unit": "m",
+      "method": "formula",
+      "inputs": {
+        "count": 1,
+        "instrumentLimit": 0.001,
+        "inputToOutputScale": 1
+      }
+    },
+    {
+      "id": "lever-arm",
+      "label": "光杠杆臂长",
+      "formula": "x̄=Σxᵢ/n",
+      "value": 0.1,
+      "unit": "m",
+      "method": "formula",
+      "inputs": {
+        "count": 1,
+        "instrumentLimit": 0.0001,
+        "inputToOutputScale": 1
+      }
+    },
+    {
+      "id": "youngModulus",
+      "label": "杨氏模量",
+      "formula": "E=8FLD/(πd²bC)",
+      "value": 31830988618.379086,
+      "unit": "Pa",
+      "method": "formula",
+      "inputs": {
+        "forceN": 5,
+        "lengthM": 1,
+        "diameterM": 0.0019999999999999996,
+        "displacementM": 0.001,
+        "opticalAmplification": 20
+      }
+    }
+  ],
+  "observations": [],
+  "referenceMaterial": [],
+  "rawTableSchemas": [
+    {
+      "id": "loading",
+      "title": "钢丝伸长量的实验测量数据",
+      "columns": [
+        {
+          "key": "number",
+          "label": "序号",
+          "kind": "fixed",
+          "width": 110
+        },
+        {
+          "key": "mass",
+          "label": "m/g",
+          "kind": "number",
+          "width": 180,
+          "min": 0
+        },
+        {
+          "key": "loading",
+          "label": "nᵢ/mm",
+          "kind": "number",
+          "width": 180
+        },
+        {
+          "key": "unloading",
+          "label": "n′ᵢ/mm",
+          "kind": "number",
+          "width": 180
+        },
+        {
+          "key": "mean",
+          "label": "n̄ᵢ/mm",
+          "kind": "computed",
+          "width": 180
+        }
+      ],
+      "layout": {
+        "type": "horizontal",
+        "fields": [
+          "mass",
+          "loading",
+          "unloading",
+          "mean"
+        ]
+      },
+      "fixedCells": {},
+      "sourceNumber": "3"
+    },
+    {
+      "id": "diameters",
+      "title": "钢丝直径测量数据",
+      "columns": [
+        {
+          "key": "number",
+          "label": "序号",
+          "kind": "fixed",
+          "width": 110
+        },
+        {
+          "key": "diameter",
+          "label": "d/mm",
+          "kind": "number",
+          "width": 180,
+          "positive": true
+        }
+      ],
+      "layout": {
+        "type": "horizontal",
+        "fields": [
+          "diameter"
+        ],
+        "average": true
+      },
+      "fixedCells": {},
+      "sourceNumber": "2"
+    },
+    {
+      "id": "force-extension",
+      "title": "钢丝伸长量的数据处理表格",
+      "columns": [
+        {
+          "key": "number",
+          "label": "序号",
+          "kind": "fixed",
+          "width": 110
+        },
+        {
+          "key": "force",
+          "label": "Fᵢ/N",
+          "kind": "computed",
+          "width": 180
+        },
+        {
+          "key": "extension",
+          "label": "Cᵢ/mm",
+          "kind": "computed",
+          "width": 180
+        }
+      ],
+      "layout": {
+        "type": "horizontal",
+        "fields": [
+          "force",
+          "extension"
+        ]
+      },
+      "fixedCells": {},
+      "sourceNumber": "4"
+    }
+  ],
+  "reportTables": [
+    {
+      "id": "loading",
+      "title": "钢丝伸长量的实验测量数据",
+      "sourceNumber": "3",
+      "columns": [
+        {
+          "key": "number",
+          "label": "序号",
+          "kind": "fixed",
+          "width": 110
+        },
+        {
+          "key": "mass",
+          "label": "m/g",
+          "kind": "number",
+          "width": 180,
+          "min": 0
+        },
+        {
+          "key": "loading",
+          "label": "nᵢ/mm",
+          "kind": "number",
+          "width": 180
+        },
+        {
+          "key": "unloading",
+          "label": "n′ᵢ/mm",
+          "kind": "number",
+          "width": 180
+        },
+        {
+          "key": "mean",
+          "label": "n̄ᵢ/mm",
+          "kind": "computed",
+          "width": 180
+        }
+      ],
+      "layout": {
+        "type": "horizontal",
+        "fields": [
+          "mass",
+          "loading",
+          "unloading",
+          "mean"
+        ]
+      },
+      "hint": "",
+      "fixedCells": {},
+      "averages": {},
+      "rows": [
+        {
+          "number": "1",
+          "mass": "0",
+          "loading": "0.000",
+          "unloading": "0.000",
+          "mean": 0
+        },
+        {
+          "number": "2",
+          "mass": "100",
+          "loading": "0.200",
+          "unloading": "0.200",
+          "mean": 0.2
+        },
+        {
+          "number": "3",
+          "mass": "200",
+          "loading": "0.400",
+          "unloading": "0.400",
+          "mean": 0.4
+        },
+        {
+          "number": "4",
+          "mass": "300",
+          "loading": "0.600",
+          "unloading": "0.600",
+          "mean": 0.6
+        },
+        {
+          "number": "5",
+          "mass": "400",
+          "loading": "0.800",
+          "unloading": "0.800",
+          "mean": 0.8
+        },
+        {
+          "number": "6",
+          "mass": "500",
+          "loading": "1.000",
+          "unloading": "1.000",
+          "mean": 1
+        },
+        {
+          "number": "7",
+          "mass": "600",
+          "loading": "1.200",
+          "unloading": "1.200",
+          "mean": 1.2
+        },
+        {
+          "number": "8",
+          "mass": "700",
+          "loading": "1.400",
+          "unloading": "1.400",
+          "mean": 1.4
+        },
+        {
+          "number": "9",
+          "mass": "800",
+          "loading": "1.600",
+          "unloading": "1.600",
+          "mean": 1.6
+        },
+        {
+          "number": "10",
+          "mass": "900",
+          "loading": "1.800",
+          "unloading": "1.800",
+          "mean": 1.8
+        }
+      ]
+    },
+    {
+      "id": "diameters",
+      "title": "钢丝直径测量数据",
+      "sourceNumber": "2",
+      "columns": [
+        {
+          "key": "number",
+          "label": "序号",
+          "kind": "fixed",
+          "width": 110
+        },
+        {
+          "key": "diameter",
+          "label": "d/mm",
+          "kind": "number",
+          "width": 180,
+          "positive": true
+        }
+      ],
+      "layout": {
+        "type": "horizontal",
+        "fields": [
+          "diameter"
+        ],
+        "average": true
+      },
+      "hint": "补充测量：报告要求计算直径及其不确定度，需保留这5次读数。",
+      "fixedCells": {},
+      "averages": {
+        "diameter": 2.01
+      },
+      "rows": [
+        {
+          "number": "1",
+          "diameter": "2.01"
+        },
+        {
+          "number": "2",
+          "diameter": "2.01"
+        },
+        {
+          "number": "3",
+          "diameter": "2.01"
+        },
+        {
+          "number": "4",
+          "diameter": "2.01"
+        },
+        {
+          "number": "5",
+          "diameter": "2.01"
+        }
+      ]
+    },
+    {
+      "id": "force-extension",
+      "title": "钢丝伸长量的数据处理表格",
+      "sourceNumber": "4",
+      "columns": [
+        {
+          "key": "number",
+          "label": "序号",
+          "kind": "fixed",
+          "width": 110
+        },
+        {
+          "key": "force",
+          "label": "Fᵢ/N",
+          "kind": "computed",
+          "width": 180
+        },
+        {
+          "key": "extension",
+          "label": "Cᵢ/mm",
+          "kind": "computed",
+          "width": 180
+        }
+      ],
+      "layout": {
+        "type": "horizontal",
+        "fields": [
+          "force",
+          "extension"
+        ]
+      },
+      "hint": "按1→6、2→7、3→8、4→9、5→10组成五组逐差；原件十列保留，后五列不参与逐差平均。",
+      "fixedCells": {},
+      "averages": {},
+      "rows": [
+        {
+          "number": "1",
+          "force": 5,
+          "extension": 1
+        },
+        {
+          "number": "2",
+          "force": 5,
+          "extension": 1
+        },
+        {
+          "number": "3",
+          "force": 5,
+          "extension": 1
+        },
+        {
+          "number": "4",
+          "force": 5,
+          "extension": 1
+        },
+        {
+          "number": "5",
+          "force": 5,
+          "extension": 1
+        },
+        {
+          "number": "6",
+          "force": "—",
+          "extension": "—"
+        },
+        {
+          "number": "7",
+          "force": "—",
+          "extension": "—"
+        },
+        {
+          "number": "8",
+          "force": "—",
+          "extension": "—"
+        },
+        {
+          "number": "9",
+          "force": "—",
+          "extension": "—"
+        },
+        {
+          "number": "10",
+          "force": "—",
+          "extension": "—"
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "actual-steps",
+      "label": "根据本人实际操作写实验步骤。",
+      "status": "manual"
+    },
+    {
+      "id": "analysis",
+      "label": "结合实际现象、数值、图表完成结果及误差分析；计算数据不等于报告已完成。",
+      "status": "manual"
+    }
+  ],
+  "requirements": {
+    "source": "杨氏模量原始记录图，第1–3页",
+    "processing": [
+      "实验步骤、数据列表、数据处理和实验结果分析。",
+      "L单次测量，按毫米尺半分度误差及原件u(L)=Δ_ins写结果表达式。",
+      "加载、卸载读数取均值；用i与i+5形成5组逐差，计算伸长量及不确定度。",
+      "5次结果相同时按单次测量评定；外力F无需不确定度评定。",
+      "钢丝直径、杨氏模量及其不确定度；质量g换成kg，注意直径平方。"
+    ],
+    "submission": [],
+    "notes": [
+      "原图没有完整电子提交说明。",
+      "处理表的10列序号与5组有效逐差存在版式差异，不能编造10组配对。"
+    ]
+  },
+  "source": "杨氏模量要求图，第2–3页",
+  "tableBasis": "报告表3增加平均读数，表4列出五组Fᵢ/Cᵢ；直径测量是模量与不确定度所需的补充测量。",
+  "missingInputs": []
+}

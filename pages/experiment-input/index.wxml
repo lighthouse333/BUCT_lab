@@ -1,25 +1,26 @@
 <template name="field-value">
-  <text wx:if="{{field.kind === 'fixed'}}" class="source-fixed">{{field.value}}</text>
-  <text wx:elif="{{field.kind === 'computed'}}" class="source-computed">{{field.value || '待计算'}}</text>
+  <scientific-text wx:if="{{field.kind === 'fixed'}}" text-class="source-fixed" value="{{field.value}}" />
+  <scientific-text wx:elif="{{field.kind === 'computed'}}" text-class="source-computed" value="{{field.value || '待计算'}}" />
   <block wx:else>
     <textarea wx:if="{{field.kind === 'text'}}" class="source-textarea" value="{{field.value}}" data-table="{{tableIndex}}" data-row="{{rowIndex}}" data-column="{{columnIndex}}" bindinput="onCellInput" bindblur="onCellBlur" placeholder="填写实际观察" maxlength="500" aria-label="{{field.label}}" />
-    <input wx:else class="source-input" value="{{field.value}}" data-table="{{tableIndex}}" data-row="{{rowIndex}}" data-column="{{columnIndex}}" bindinput="onCellInput" bindblur="onCellBlur" placeholder="填写读数" maxlength="40" aria-label="{{field.label}}" />
-    <text wx:if="{{field.error}}" class="error source-error">{{field.error}}</text>
+    <scientific-input wx:else variant="table" value="{{field.value}}" data-table="{{tableIndex}}" data-row="{{rowIndex}}" data-column="{{columnIndex}}" bindinput="onCellInput" bindblur="onCellBlur" placeholder="填写读数" maxlength="40" label="{{field.label}}" invalid="{{!!field.error}}" />
+    <scientific-text wx:if="{{field.error}}" text-class="error source-error" value="{{field.error}}" />
   </block>
 </template>
 <view class="page">
   <view wx:if="{{loadError}}" class="card">
-    <text class="error">{{loadError}}</text>
+    <scientific-text text-class="error" value="{{loadError}}" />
     <button class="primary" bindtap="onGoBack">返回实验选择</button>
   </view>
   <block wx:elif="{{experiment}}">
     <text class="eyebrow">BUCT LAB · {{experiment.category}}</text>
-    <text class="title">{{experiment.name}}</text>
+    <scientific-text text-class="title" value="{{experiment.name}}" />
     <view wx:if="{{observationOnly}}" class="notice observation-notice">
       <text class="notice-title">本实验无需数值数据处理</text>
       <text>数据处理：记录分析实验现象。请填写原表中的实际角度和填空，并将实验现象手工整理到实验报告中。</text>
     </view>
-    <text class="subtitle">{{note}}</text>
+    <scientific-text text-class="subtitle" value="{{note}}" />
+    <text class="hint">表格依据：{{reportBasis}}</text>
     <view class="card">
       <text class="section-title">实验信息</text>
       <view class="info-grid">
@@ -29,14 +30,16 @@
     </view>
     <view wx:if="{{parameters.length}}" class="card">
       <text class="section-title">实验参数</text>
-      <text class="hint">核对实际仪器和单位，保留原始读数的小数位。</text>
+      <text class="hint">核对实际仪器和单位，保留原始读数的小数位。尺寸与仪器误差用于教材规定的计算；方法与修约由程序统一处理。</text>
       <block wx:for="{{parameters}}" wx:key="key">
-        <label wx:if="{{item.visible}}" class="full-label" id="{{item.id}}">{{item.label}}{{item.optional ? '（选填）' : ''}}
-          <input class="{{item.error ? 'input-error' : ''}}" value="{{item.value}}" data-index="{{index}}" bindinput="onParameterInput" bindblur="onParameterBlur" placeholder="{{item.placeholder || '按实际实验填写'}}" maxlength="{{item.kind === 'text' ? 200 : 40}}" aria-label="{{item.label}}" />
-          <text wx:if="{{item.error}}" class="error">{{item.error}}</text>
+        <label wx:if="{{item.visible}}" class="full-label" id="{{item.id}}"><scientific-text value="{{item.label + (item.optional ? '（选填）' : '')}}" />
+          <scientific-text wx:if="{{item.readOnly}}" text-class="source-fixed" value="{{item.value}}" />
+          <input wx:elif="{{item.kind === 'text'}}" class="{{item.error ? 'input-error' : ''}}" value="{{item.value}}" data-index="{{index}}" bindinput="onParameterInput" bindblur="onParameterBlur" placeholder="{{item.placeholder || '按实际实验填写'}}" maxlength="200" aria-label="{{item.label}}" />
+          <scientific-input wx:else value="{{item.value}}" data-index="{{index}}" bindinput="onParameterInput" bindblur="onParameterBlur" placeholder="{{item.placeholder || '按实际实验填写'}}" label="{{item.label}}" invalid="{{!!item.error}}" />
+          <scientific-text wx:if="{{item.error}}" text-class="error" value="{{item.error}}" />
         </label>
       </block>
-      <view wx:for="{{derivedParameters}}" wx:key="key" class="metric"><text>{{item.label}}</text><text>{{item.value}}</text></view>
+      <view wx:for="{{derivedParameters}}" wx:key="key" class="metric"><scientific-text value="{{item.label}}" /><scientific-text value="{{item.value}}" /></view>
     </view>
     <view wx:if="{{modes.length}}" class="card">
       <text class="section-title">圆环记录方案</text>
@@ -48,15 +51,15 @@
     <view wx:if="{{introSections.length}}" class="card source-intro">
       <text class="hint">以下为原表预印的现象记录与分析；实际观察如有补充，可在上方记录。</text>
       <view wx:for="{{introSections}}" wx:key="title" class="intro-section">
-        <text class="section-title">{{item.title}}</text>
-        <text wx:for="{{item.lines}}" wx:for-item="line" wx:key="*this" class="intro-line">{{line}}</text>
+        <scientific-text text-class="section-title" value="{{item.title}}" />
+        <scientific-text wx:for="{{item.lines}}" wx:for-item="line" wx:key="*this" text-class="intro-line" value="{{line}}" />
       </view>
     </view>
-    <view class="notice">左右滑动查看完整原表。蓝色格填写原始读数或填空；固定文字和图示按原件保留，“待计算”格由后续数据处理生成。</view>
+    <view class="notice">左右滑动查看完整报告处理表。蓝色格填写测量值或实际观察；均值、逐差、直径、对数等计算格只读，数据齐备后自动生成。程序按教材处理、自动选取图解点，并在结果页标明。</view>
     <block wx:for="{{tables}}" wx:for-item="table" wx:for-index="tableIndex" wx:key="id">
       <view wx:if="{{table.visible}}" class="card table-card">
-        <text class="section-title">{{table.sourceNumber ? '表' + table.sourceNumber + ' ' : ''}}{{table.title}}</text>
-        <text wx:if="{{table.hint}}" class="hint">{{table.hint}}</text>
+        <scientific-text text-class="section-title" value="{{table.sourceNumber ? '表' + table.sourceNumber + ' ' : ''}}{{table.title}}" />
+        <scientific-text wx:if="{{table.hint}}" text-class="hint" value="{{table.hint}}" />
         <scroll-view scroll-x class="table-scroll" scroll-into-view="{{table.scrollTarget}}" scroll-with-animation>
           <view class="source-table" style="width:{{table.width + 2}}rpx;height:{{table.height + 2}}rpx;">
             <view wx:for="{{table.displayCells}}" wx:for-item="cell" wx:key="id" id="{{cell.id}}" class="source-cell {{cell.heading ? 'source-heading' : ''}} {{cell.computed ? 'source-computed-cell' : ''}} {{cell.field ? 'source-field-cell' : ''}} {{cell.field && table.rows[cell.row].cells[cell.column].error ? 'cell-error' : ''}}" style="{{cell.style}}">
@@ -68,16 +71,16 @@
               <view wx:elif="{{cell.parts}}" class="source-phenomenon">
                 <view wx:for="{{cell.parts}}" wx:for-item="part" wx:key="key" class="phenomenon-line">
                   <block wx:if="{{part.input}}">
-                    <text>{{part.prefix}}</text>
+                    <scientific-text value="{{part.prefix}}" />
                     <view id="{{part.id}}" class="axis-answer {{table.rows[part.row].cells[part.column].error ? 'cell-error' : ''}}">
                       <input value="{{table.rows[part.row].cells[part.column].value}}" data-table="{{tableIndex}}" data-row="{{part.row}}" data-column="{{part.column}}" bindinput="onCellInput" bindblur="onCellBlur" placeholder="填空" maxlength="40" aria-label="{{table.rows[part.row].cells[part.column].label}}" />
-                    </view><text>{{part.suffix}}</text>
+                    </view><scientific-text value="{{part.suffix}}" />
                   </block>
-                  <text wx:else>{{part.text}}</text>
+                  <scientific-text wx:else value="{{part.text}}" />
                 </view>
               </view>
-              <view wx:elif="{{cell.corner}}" class="source-corner"><text>{{cell.corner}}</text><text>{{cell.content}}</text></view>
-              <text wx:else class="source-label">{{cell.content}}</text>
+              <view wx:elif="{{cell.corner}}" class="source-corner"><scientific-text value="{{cell.corner}}" /><scientific-text value="{{cell.content}}" /></view>
+              <scientific-text wx:else text-class="source-label" value="{{cell.content}}" />
             </view>
           </view>
         </scroll-view>
@@ -89,16 +92,17 @@
     </block>
     <view wx:if="{{observationOnly}}" class="card report-requirements">
       <text class="section-title">实验报告要求</text>
-      <view wx:for="{{reportRequirements}}" wx:key="*this" class="report-item"><text>{{item}}</text></view>
+      <view wx:for="{{reportRequirements}}" wx:key="*this" class="report-item"><scientific-text value="{{item}}" /></view>
       <text class="section-title">实验报告提交要求</text>
       <text class="hint">该部分不需写入实验报告中。</text>
-      <view wx:for="{{reportSubmission}}" wx:key="*this" class="report-item"><text class="report-number">{{index + 1}}.</text><text>{{item}}</text></view>
+      <view wx:for="{{reportSubmission}}" wx:key="*this" class="report-item"><text class="report-number">{{index + 1}}.</text><scientific-text value="{{item}}" /></view>
     </view>
     <view class="card">
-      <text class="section-title">{{observationOnly ? '核对实验记录' : '核对原始数据'}}</text>
-      <text wx:if="{{message}}" class="{{errorCount ? 'error' : 'success'}}">{{message}}</text>
-      <text class="hint">检查填写完整性和数值格式。离开页面后记录不保留，请先复制需要的记录。{{observationOnly ? '' : '其余实验的数据处理与结果页尚未接入。'}}</text>
-      <button class="primary" bindtap="onCheck">{{observationOnly ? '检查记录' : '检查输入'}}</button>
+      <scientific-text text-class="section-title" value="{{observationOnly ? '核对实验记录' : '核对原始数据'}}" />
+      <scientific-text wx:if="{{message}}" text-class="{{errorCount ? 'error' : 'success'}}" value="{{message}}" />
+      <text class="hint">{{observationOnly ? '填写完整后可进入实验记录整理页，查看并复制报告所需记录。' : '填写完整后开始计算，按教材要求查看处理表、自动选点与报告数据。'}}从结果页返回可继续修改原表。</text>
+      <button class="primary" bindtap="onStartCalculation" loading="{{calculating}}" disabled="{{calculating}}">{{observationOnly ? '整理实验记录' : '开始计算'}}</button>
+      <button class="secondary" bindtap="onCheck">{{observationOnly ? '检查记录' : '检查输入'}}</button>
       <button class="secondary" bindtap="onCopy">{{observationOnly ? '复制实验记录' : '复制原始数据'}}</button>
       <button class="reset" bindtap="onReset">恢复空白模板</button>
     </view>

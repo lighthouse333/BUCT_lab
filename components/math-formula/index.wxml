@@ -1,0 +1,115 @@
+<!-- WXML禁止同名模板递归；使用16层有界公式模板。公式树在测试中校验深度。 -->
+<template name="math-node-0">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-1" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-1" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-1" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-1" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-1" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-1" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-1" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-1">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-2" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-2" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-2" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-2" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-2" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-2" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-2" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-2">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-3" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-3" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-3" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-3" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-3" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-3" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-3" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-3">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-4" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-4" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-4" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-4" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-4" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-4" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-4" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-4">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-5" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-5" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-5" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-5" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-5" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-5" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-5" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-5">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-6" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-6" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-6" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-6" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-6" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-6" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-6" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-6">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-7" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-7" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-7" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-7" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-7" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-7" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-7" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-7">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-8" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-8" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-8" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-8" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-8" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-8" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-8" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-8">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-9" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-9" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-9" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-9" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-9" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-9" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-9" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-9">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-10" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-10" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-10" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-10" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-10" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-10" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-10" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-10">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-11" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-11" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-11" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-11" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-11" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-11" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-11" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-11">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-12" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-12" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-12" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-12" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-12" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-12" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-12" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-12">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-13" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-13" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-13" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-13" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-13" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-13" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-13" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-13">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-14" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-14" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-14" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-14" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-14" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-14" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-14" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-14">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-15" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-15" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-15" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-15" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-15" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-15" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-15" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-15">
+  <view wx:if="{{node.kind === 'row'}}" class="math-row"><block wx:for="{{node.children}}" wx:key="id"><template is="math-node-16" data="{{node:item}}" /></block></view>
+  <view wx:elif="{{node.kind === 'fraction'}}" class="math-fraction"><view class="math-numerator"><template is="math-node-16" data="{{node:node.numerator}}" /></view><view class="math-denominator"><template is="math-node-16" data="{{node:node.denominator}}" /></view></view>
+  <view wx:elif="{{node.kind === 'script'}}" class="math-script"><template is="math-node-16" data="{{node:node.base}}" /><view class="math-script-column"><view wx:if="{{node.upper}}" class="math-upper"><template is="math-node-16" data="{{node:node.upper}}" /></view><view wx:if="{{node.lower}}" class="math-lower"><template is="math-node-16" data="{{node:node.lower}}" /></view></view></view>
+  <view wx:elif="{{node.kind === 'root'}}" class="math-row"><text class="math-root-symbol">√</text><view class="math-root-body"><template is="math-node-16" data="{{node:node.body}}" /></view></view>
+  <scientific-text wx:else text-class="math-text" selectable value="{{node.value}}" />
+</template>
+<template name="math-node-16"><scientific-text text-class="math-text" selectable value="{{node.value}}" /></template>
+<view class="math-formula {{large ? 'math-large' : ''}} {{compact ? 'math-compact' : ''}} {{accent ? 'math-accent' : ''}}"><template is="math-node-0" data="{{node:expression}}" /></view>

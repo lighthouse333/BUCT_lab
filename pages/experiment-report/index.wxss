@@ -1,0 +1,56 @@
+@import "../experiment-input/index.wxss";
+.notice-title { display: block; font-weight: 600; font-size: 29rpx; margin-bottom: 10rpx; }
+.status-complete { background: #e9f6ee; color: #145c36; }
+.status-invalid { background: #fff0ee; color: #b42318; }
+.secondary { background: #edf3ff; color: #204fa3; margin-top: 18rpx; }
+.result-item, .issue-item { padding: 18rpx 0; border-bottom: 1rpx solid #e8edf5; }
+.result-label, .issue-location { display: block; font-size: 26rpx; font-weight: 600; line-height: 1.7; }
+.result-value { display: block; color: #204fa3; font-size: 32rpx; margin-top: 14rpx; overflow-wrap: anywhere; }
+.report-table { border-top: 1rpx solid #c2cad7; border-left: 1rpx solid #c2cad7; }
+.report-row { display: flex; }
+.report-cell { display: flex; flex: 1; min-width: 0; padding: 18rpx 12rpx; box-sizing: border-box; border-right: 1rpx solid #c2cad7; border-bottom: 1rpx solid #c2cad7; font-size: 24rpx; text-align: center; align-items: center; justify-content: center; overflow-wrap: anywhere; white-space: pre-wrap; line-height: 1.7; }
+.report-heading { background: #f1f5f9; font-weight: 600; }
+.report-line { display: block; margin: 16rpx 0; line-height: 1.8; font-size: 25rpx; white-space: pre-wrap; }
+.chart-data { margin-top: 30rpx; }
+.coordinate-row { display: flex; border-bottom: 1rpx solid #e8edf5; font-size: 24rpx; }
+.coordinate-row text { width: 50%; padding: 16rpx 10rpx; box-sizing: border-box; text-align: center; overflow-wrap: anywhere; }
+.coordinate-row > scientific-text { width: 50%; padding: 16rpx 10rpx; box-sizing: border-box; text-align: center; overflow-wrap: anywhere; }
+.math-scroll { width: 100%; margin: 12rpx 0; white-space: nowrap; }
+.graph-selection { padding: 24rpx 0; border-bottom: 1rpx solid #e8edf5; }
+.graph-selection .coordinate-row text { width: 40%; }
+.graph-selection .coordinate-row text:first-child { width: 20%; }
+.graph-selection .coordinate-row > scientific-text { width: 40%; }
+.graph-selection .coordinate-row > scientific-text:first-child { width: 20%; }
+.writing-note .section-title { font-size: 27rpx; margin-bottom: 10rpx; }
+.writing-note .hint { margin-bottom: 0; font-size: 23rpx; }
+.unit-note { display: block; font-size: 25rpx; color: #334155; line-height: 1.7; }
+.results-heading { display: flex; align-items: center; justify-content: space-between; margin: 30rpx 4rpx 16rpx; }
+.results-heading .section-title { margin: 0; }
+.results-count { color: #64748b; font-size: 24rpx; }
+.result-card { padding: 24rpx; border-radius: 16rpx; border-color: #dce3ed; }
+.result-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16rpx; }
+.result-heading .result-label { font-size: 28rpx; }
+.method-tag { flex-shrink: 0; max-width: 200rpx; background: #f1f5f9; color: #526176; border-radius: 6rpx; padding: 5rpx 10rpx; font-size: 21rpx; line-height: 1.6; }
+.result-main { margin: 8rpx 0 16rpx; }
+.result-main .math-scroll { margin: 0; }
+.result-badges { display: flex; flex-wrap: wrap; gap: 12rpx; }
+.result-badge { display: flex; align-items: center; gap: 12rpx; background: #f4f7fb; color: #526176; border-radius: 8rpx; padding: 10rpx 14rpx; font-size: 23rpx; }
+.result-badge > scientific-text { color: #1e3a5f; font-weight: 600; }
+.details-toggle { display: flex; align-items: center; justify-content: space-between; width: 100%; margin: 20rpx 0 0; padding: 18rpx 0 0; border-top: 1rpx solid #e8edf5; border-radius: 0; background: transparent; color: #335e99; font-size: 24rpx; }
+.calculation-details { margin-top: 18rpx; padding: 0; background: #fff; }
+.detail-section + .detail-section { border-top: 1rpx solid #e2e8f0; margin-top: 22rpx; padding-top: 22rpx; }
+.detail-title { display: block; color: #334155; font-weight: 600; font-size: 25rpx; margin-bottom: 12rpx; }
+.calculation-details .hint { font-size: 22rpx; margin: 12rpx 0 0; }
+.process-reason { display: block; color: #334155; font-size: 26rpx; line-height: 1.8; margin: 10rpx 0 18rpx; }
+.fact-list { display: block; margin: 12rpx 0 20rpx; padding: 12rpx 16rpx; background: #f4f7fb; border-radius: 8rpx; color: #526176; font-size: 25rpx; line-height: 1.8; }
+.fact-line { padding: 5rpx 0; }
+.calculation-step { padding: 20rpx 0; border-bottom: 1rpx solid #e8edf5; }
+.step-heading { display: flex; align-items: flex-start; gap: 12rpx; margin-bottom: 14rpx; }
+.step-number { min-width: 30rpx; height: 30rpx; line-height: 30rpx; text-align: center; border-radius: 6rpx; background: #edf3ff; color: #335e99; font-size: 22rpx; margin-top: 4rpx; }
+.step-title { display: block; font-size: 26rpx; line-height: 1.6; font-weight: 600; color: #263c59; }
+.equation-line { width: 100%; margin: 10rpx 0; white-space: nowrap; text-align: left; }
+.equation-caption { display: block; font-size: 23rpx; color: #64748b; margin: 14rpx 0 4rpx; }
+.step-result { box-sizing: border-box; width: 100%; margin: 12rpx 0 8rpx; padding: 8rpx 12rpx; background: #f1f6fd; border-radius: 7rpx; text-align: left; white-space: nowrap; }
+.step-note { display: block; margin-top: 10rpx; font-size: 24rpx; line-height: 1.8; color: #64748b; }
+.formula-reference { margin-top: 24rpx; padding: 18rpx 0 0; border-top: 1rpx dashed #cbd5e1; }
+.reference-title { display: block; font-size: 25rpx; color: #526176; font-weight: 600; line-height: 1.7; }

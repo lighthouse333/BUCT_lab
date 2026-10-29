@@ -1,0 +1,4 @@
+{
+  "navigationBarTitleText": "实验计算结果",
+  "usingComponents": { "math-formula": "/components/math-formula/index", "scientific-text": "/components/scientific-text/index" }
+}

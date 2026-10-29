@@ -1,0 +1,51 @@
+{
+  "description": "人工校验示例，非实测；固定k=3，左右采用第3级暗纹位置。",
+  "input": {
+    "experimentId": "single-slit",
+    "schemaVersion": 3,
+    "templateVersion": "2026-10-28-report",
+    "mode": "",
+    "info": {
+      "studentClass": "",
+      "studentName": "",
+      "studentId": "",
+      "date": "",
+      "teacher": ""
+    },
+    "parameters": {
+      "slitWidth": "0.1",
+      "order": "3",
+      "distanceLimit": "0.05",
+      "positionLimit": "0.004"
+    },
+    "tables": [
+      {
+        "id": "distances",
+        "rows": [
+          {
+            "number": "1",
+            "z": "100"
+          },
+          {
+            "number": "2",
+            "z": "100"
+          },
+          {
+            "number": "3",
+            "z": "100"
+          }
+        ]
+      },
+      {
+        "id": "minima",
+        "rows": [
+          {
+            "left": "-18",
+            "center": "0",
+            "right": "18"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -113,25 +113,26 @@ test('应变17个位移三位小数，3循环均有正反与滞后；不让用�
   assert.match(page.data.message, /数值格式检查通过/)
 })
 
-test('塞曼四行方向交替、各检偏角完整；预印现象不冒充用户输入', () => {
+test('塞曼报告四行方向交替、各检偏角完整；现象实填并保留分析栏', () => {
   const { page } = pageHarness('zeeman-effect')
   page.onCellInput(cellEvent(0, 0, 1, '12.300'))
   page.onModeChange({ detail: { value: 'sigma' } })
   assert.deepEqual(Array.from(page.data.tables.filter(t => t.visible), t => t.id), ['sigma-field', 'sigma-zero', 'polarization'])
   assert.deepEqual(Array.from(page.data.tables[2].rows, r => r.cells[0].value), ['→', '←', '→', '←'])
-  assert.equal(page.data.parameters.find(f => f.key === 'components').visible, false)
+  assert.equal(page.data.parameters.find(f => f.key === 'componentA').visible, false)
   const operations = page.data.tables[4].rows.map(r => r.cells[1].value).join('\n')
   for (const angle of ['0°（360°）', '90°', '180°', '270°', '45°（225°）', '135°（315°）']) assert.ok(operations.includes(angle))
   fillRequired(page.data)
   assert.deepEqual(validateForm(page.data), [])
   const payload = collectInput(page.data)
-  assert.ok(!('components' in payload.parameters))
-  assert.ok(!('phenomenon' in payload.tables.at(-1).rows[0]))
+  assert.ok(!('componentA' in payload.parameters))
+  assert.equal(payload.tables.at(-1).rows[0].phenomenon, '实测记录')
+  assert.ok(page.data.tables[4].columns.some(c => c.key === 'analysis'))
   assert.ok(!formatInput(page.data).includes('12.300'))
-  assert.match(formatInput(page.data), /原表预印/)
+  assert.match(formatInput(page.data), /分析及结论/)
   page.onModeChange({ detail: { value: 'combined' } })
   assert.equal(page.data.tables[0].rows[0].cells[1].value, '12.300')
-  assert.equal(page.data.parameters.find(f => f.key === 'components').visible, true)
+  assert.equal(page.data.parameters.find(f => f.key === 'componentA').visible, true)
 })
 
 test('光的偏振按4列原表呈现，7个方向图、填空和预印文字保留；45°不强制填不存在的答案', () => {
@@ -170,7 +171,7 @@ test('迈克尔孙6组原始位置和后3格逐差，调零与n=0输入独立，
   page.onCopy()
   assert.match(calls.clipboard[0], /0\.12000/)
   const payload = collectInput(page.data)
-  assert.equal(payload.schemaVersion, 2)
+  assert.equal(payload.schemaVersion, 3)
   assert.equal(payload.tables[0].rows[0].position, '0.12000')
   assert.equal(payload.tables[0].rows[0].number, '1')
   assert.ok(!('difference' in payload.tables[0].rows[0]))
@@ -179,7 +180,7 @@ test('迈克尔孙6组原始位置和后3格逐差，调零与n=0输入独立，
 })
 
 test('原件省略号支持按实际记录：全空行不计入数据，零值有效，半填行不能漏过', () => {
-  for (const id of ['thermal-conductivity', 'single-slit', 'pn-junction']) {
+  for (const id of ['thermal-conductivity', 'pn-junction']) {
     const form = createForm(id)
     fillRequired(form)
     const t = form.tables.findIndex(item => item.skipEmptyRows)
@@ -213,22 +214,33 @@ test('增删、取消与恢复模板后版式和数据保持同步，横向表�
   assert.equal(page.data.parameters.find(f => f.key === 'sourceVpp').value, '6.00')
 })
 
-test('单缝只录原始2表；平均值位置存在；扫描从3行扩展至200并保留读数', () => {
+test('单缝按报告只列表1和表3；位置填在表3，距离自动算，扫描不再是必填表', () => {
   const { page } = pageHarness('single-slit')
+  const orderIndex = page.data.parameters.findIndex(p => p.key === 'order')
+  const order = page.data.parameters[orderIndex]
+  assert.equal(order.value, '3')
+  assert.equal(order.readOnly, true)
+  page.onParameterInput({ currentTarget: { dataset: { index: orderIndex } }, detail: { value: '1' } })
+  assert.equal(collectInput(page.data).parameters.order, '3')
+  assert.match(validateField({ ...order, value: '2' }), /固定为 3/)
   assert.equal(page.data.tables.length, 2)
   assert.ok(page.data.tables[0].displayCells.some(c => c.content === '平均值'))
-  assert.equal(page.data.tables[1].rows.length, 3)
-  page.onCellInput(cellEvent(1, 0, 1, '-0.12000'))
-  page.onCellInput(cellEvent(1, 0, 2, '0.000'))
-  for (let i = 0; i < 198; i++) page.onAddRow({ currentTarget: { dataset: { table: 1 } } })
-  assert.equal(page.data.tables[1].rows.length, 200)
+  assert.equal(page.data.tables[1].sourceNumber, '3')
+  assert.equal(page.data.tables[1].rows.length, 1)
+  page.onCellInput(cellEvent(1, 0, 0, '-6.00000'))
+  page.onCellInput(cellEvent(1, 0, 1, '0.000'))
+  page.onCellInput(cellEvent(1, 0, 2, '6.00000'))
+  page.onAddRow({ currentTarget: { dataset: { table: 1 } } })
+  assert.equal(page.data.tables[1].rows.length, 1)
   const rows = collectInput(page.data).tables[1].rows
   assert.equal(rows.length, 1)
-  assert.equal(rows[0].position, '-0.12000')
-  assert.equal(rows[0].intensity, '0.000')
+  assert.equal(rows[0].left, '-6.00000')
+  assert.equal(rows[0].center, '0.000')
+  assert.equal(page.data.tables[1].rows[0].cells[5].value, '6.000')
+  assert.ok(!('meanDistance' in rows[0]))
 })
 
-test('杨氏、开尔文、PN保留原单位、小数位及原表平均值，不混入报告处理列', () => {
+test('杨氏、开尔文、PN保留单位、小数位，并包含报告要求的自动处理列', () => {
   const young = createForm('young-modulus')
   assert.equal(young.parameters.find(f => f.key === 'wireLength').value, '89.00')
   assert.match(young.parameters.find(f => f.key === 'wireLength').label, /cm/)
@@ -240,7 +252,10 @@ test('杨氏、开尔文、PN保留原单位、小数位及原表平均值，不
   const pn = createForm('pn-junction')
   assert.equal(pn.tables[0].rows[0].cells[1].value, '0.350')
   assert.equal(pn.tables[0].rows.at(-1).cells[1].value, '0.540')
-  assert.ok(!pn.tables[0].columns.some(c => c.key === 'logCurrent'))
+  assert.ok(pn.tables[0].columns.some(c => c.key === 'logCurrent' && c.kind === 'computed'))
+  assert.ok(young.tables[0].columns.some(c => c.key === 'mean' && c.kind === 'computed'))
+  assert.ok(young.tables.some(t => t.id === 'force-extension'))
+  assert.ok(kelvin.tables[1].columns.some(c => c.key === 'mean' && c.kind === 'computed'))
 })
 
 test('积分电流计正反向电容独立，保留Q符号和实测时间，预印小数位完整', () => {

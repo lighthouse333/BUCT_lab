@@ -1,0 +1,8 @@
+:host { display: block; width: 100%; min-width: 0; }
+.number-control { box-sizing: border-box; width: 100%; color: #1e293b; }
+.number-input, .number-display { box-sizing: border-box; width: 100%; height: 100%; font-size: inherit; color: inherit; }
+.number-display { display: flex; align-items: center; }
+.parameter { margin-top: 10rpx; height: 76rpx; background: #f4f7fb; border-radius: 8rpx; padding: 0 14rpx; font-size: 25rpx; }
+.table { height: 86rpx; min-height: 86rpx; background: #eef4ff; color: #204fa3; font-size: 26rpx; text-align: center; }
+.table .number-display { justify-content: center; }
+.invalid { background: #fff0ee; }

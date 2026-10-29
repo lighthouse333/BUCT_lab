@@ -35,6 +35,8 @@ button[disabled] { background: #e2e8f0; color: #8995a7; }
 .notice { background: #fff3da; padding: 20rpx; border-radius: 12rpx; }
 .metric { display: flex; justify-content: space-between; gap: 20rpx; padding: 20rpx 0; border-bottom: 1rpx solid #e8edf5; font-size: 25rpx; line-height: 1.6; }
 .metric text:last-child { text-align: right; color: #204fa3; overflow-wrap: anywhere; }
+.metric > scientific-text:last-child { text-align: right; color: #204fa3; overflow-wrap: anywhere; }
+.formula-note { display: block; margin: 12rpx 0; line-height: 1.8; }
 .primary { background: #204fa3; color: white; margin-top: 24rpx; }
 .formulas > text:not(.section-title) { display: block; color: #64748b; font-size: 23rpx; line-height: 1.8; margin-top: 12rpx; }
 .spectral-source { width: 1142rpx; }
