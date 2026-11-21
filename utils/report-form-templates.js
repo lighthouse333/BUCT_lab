@@ -103,6 +103,43 @@ function applyReportTemplates(definitions, h) {
     parameter('componentA', 'a环所属成分编号（1～9）', '', { integer: true, positive: true, modes: ['combined'] }),
     parameter('componentB', 'b环所属成分编号（1～9）', '', { integer: true, positive: true, modes: ['combined'] }))
   zeeman.note += ' 圆环位置统一用mm；按原实验实际成分编号填写，程序不猜测a、b的归属。'
+
+  // 装置与测量方案属于实际输入，不能将另一份记录的装置强加给使用者。
+  const choice = (key, label, value, choices) => parameter(key, label, value, { kind: 'choice', choices })
+  young.parameters.unshift(choice('extensionMethod', '伸长量的测量方式', 'optical-lever', [
+    { value: 'optical-lever', label: '光杠杆：填写镜尺距离D和臂长b' },
+    { value: 'direct', label: '直接测量：标尺读数就是钢丝伸长量' },
+  ]))
+  for (const field of young.parameters) if (['leverDistanceM', 'leverArmM', 'leverDistanceLimitM', 'leverArmLimitM'].includes(field.key)) field.when = { key: 'extensionMethod', value: 'optical-lever' }
+  young.note += ' 请按实际装置选择直接测量或光杠杆；两种方法不能混算。'
+  const fresnel = definitions['fresnel-biprism']
+  fresnel.tables.forEach(t => { t.adjustable = true; t.minRows = 2; t.maxRows = 30 })
+  fresnel.note += ' 每张表可按原始记录增加至5次或其他实际次数，不删除多出的测量。'
+  const michelson = definitions.michelson
+  Object.assign(michelson.tables[0], { adjustable: true, minRows: 6, maxRows: 30 })
+  michelson.note += ' 默认6个位置，可增加至7个或更多；程序使用所有相隔3次的配对，不自动剔除数据。'
+  michelson.parameters.unshift(choice('whiteObserved', '白光条纹的实际观察情况', 'observed', [
+    { value: 'observed', label: '已观察到：填写中央条纹镜位置' },
+    { value: 'not-observed', label: '未观察到：保留未完成观察说明' },
+  ]))
+  michelson.parameters.find(p => p.key === 'whiteCenterPosition').when = { key: 'whiteObserved', value: 'observed' }
+  const rlc = definitions.rlc
+  rlc.parameters.push(choice('phaseReading', '椭圆B读数是否已按接线标注正负', 'magnitude', [
+    { value: 'magnitude', label: '只记录幅值：超前/滞后另行分析' },
+    { value: 'signed', label: '已经标注正负：按带符号B计算相位' },
+  ]))
+  definitions['hall-effect'].parameters.push(choice('hallSequence', '四次换向的记录次序（括号为I、B方向）', 'alternating', [
+    { value: 'alternating', label: '(++),(-+),(--),(+-)：U1-U2+U3-U4' },
+    { value: 'paired', label: '(++),(-+),(+-),(--)：U1-U2-U3+U4' },
+  ]))
+  definitions['hall-effect'].note += ' 必须按实际换向顺序选择组合；先消除零偏，再取幅值，不直接平均绝对值。'
+  strain.parameters.push(choice('outputVoltageUnit', '单臂和全桥输出读数的单位', 'V', [
+    { value: 'V', label: 'V（伏）' }, { value: 'mV', label: 'mV（毫伏）' },
+  ]))
+  for (const t of strain.tables.filter(t => t.id.endsWith('-nonlinearity'))) {
+    t.columns.find(c => c.key === 'residual').label = '残差（单位见参数）'
+    t.layout.groupLabel = '输出读数（单位见参数）'
+  }
 }
 
 module.exports = { applyReportTemplates }

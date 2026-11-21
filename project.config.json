@@ -2,7 +2,44 @@
   "compileType": "miniprogram",
   "libVersion": "trial",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "audit_2026-11-20"
+      },
+      {
+        "type": "folder",
+        "value": "verified_project"
+      },
+      {
+        "type": "folder",
+        "value": "BUCT_lab-main"
+      },
+      {
+        "type": "folder",
+        "value": "PN结实验后端"
+      },
+      {
+        "type": "folder",
+        "value": "tests"
+      },
+      {
+        "type": "folder",
+        "value": "docs"
+      },
+      {
+        "type": "folder",
+        "value": "tmp"
+      },
+      {
+        "type": "folder",
+        "value": "新建文件夹"
+      },
+      {
+        "type": "file",
+        "value": "BUCT_lab-main.zip"
+      }
+    ],
     "include": []
   },
   "setting": {

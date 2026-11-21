@@ -12,7 +12,7 @@ function fresnel(c) {
   const values = {}
   for (const [id, label, key, divide] of [['fringe-spacing', '条纹间距', 'fringeSpanMm', 5], ['image-l1', '放大像间距', 'image1Mm', 1], ['image-l2', '缩小像间距', 'image2Mm', 1]]) {
     values[id] = c.run(id, () => {
-      const rows = c.rows(id, ['start', 'end'], { count: 4 }).map(r => ({ ...r, difference: c.requirePositive(Math.abs(decimalDifference(r.end, r.start)), 'tables.' + id + '.difference') }))
+      const rows = c.rows(id, ['start', 'end'], { min: 2 }).map(r => ({ ...r, difference: c.requirePositive(Math.abs(decimalDifference(r.end, r.start)), 'tables.' + id + '.difference') }))
       c.table(id + '-processed', label + '处理表', [col('sourceRow', '序号'), col('start', '起始', 'mm'), col('end', '终止', 'mm'), col('difference', divide === 5 ? '跨5间隔的差值' : '差值', 'mm')], rows)
       return c.estimate(id + '-mean', label, rows.map(r => r.difference), c.limit(key), 'm', 1e-3 / divide)
     })
@@ -141,17 +141,20 @@ function michelson(c) {
     if (rows.length !== 3) c.issue('OBSERVATION_REQUIRED', '应记录等倾、单色等厚、白光条纹三类现象', 'tables.observations')
     rows.forEach((r, i) => { if (!r.analysis || !String(r.analysis).trim()) c.issue('OBSERVATION_REQUIRED', '请补充迈克尔孙现象记录第' + (i + 1) + '项', 'tables.observations.rows[' + i + '].analysis') })
     c.table('michelson-observations', '实验现象与分析', [col('item', '项目'), col('analysis', '使用者实际记录')], rows.map(r => ({ item: r.item, analysis: r.analysis || '' })))
-    c.metric('whiteCentralPosition', '白光中央条纹时镜位置', c.param('whiteCenterPosition'), 'mm', '直接记录')
+    if (c.p.whiteObserved === 'not-observed') {
+      c.issue('WHITE_LIGHT_NOT_OBSERVED', '实际未观察到白光条纹：不生成中央镜位置；此观察项仍需补做，单色光波长可独立计算。', 'parameters.whiteObserved', 'warning')
+      c.manual('white-light-observation', '补做白光条纹观察，并保留真实未观察到的记录。')
+    } else c.metric('whiteCentralPosition', '白光中央条纹时镜位置', c.param('whiteCenterPosition'), 'mm', '直接记录')
     c.metric('zeroPosition', '独立调零后镜位置', c.param('zeroPosition'), 'mm', '直接记录，不替代n=0时位置')
   })
   c.run('michelson-wavelength', () => {
-    const rows = c.rows('positions', ['order', 'position'], { count: 6, rules: { order: { min: 0, integer: true } } })
+    const rows = c.rows('positions', ['order', 'position'], { min: 6, rules: { order: { min: 0, integer: true } } })
     const h = c.param('step', { positive: true, integer: true })
     if (rows[0].order !== 0 || rows.some((r, i) => r.order !== i * h)) throw new CalculationError('FRINGE_COUNT_SEQUENCE', '首点n应为0，其后每点级次差须与记录的h一致', 'tables.positions')
     const direction = Math.sign(rows[1].position - rows[0].position)
     if (direction === 0 || rows.slice(1).some((r, i) => Math.sign(r.position - rows[i].position) !== direction)) throw new CalculationError('MIRROR_DIRECTION', '同一序列镜位置应沿同一方向变化，不能包含停滞或回转', 'tables.positions')
-    const paired = rows.slice(0, 3).map((r, i) => ({ pair: (i + 1) + '→' + (i + 4), firstPosition: r.position, lastPosition: rows[i + 3].position, count: rows[i + 3].order - r.order, difference: Math.abs(decimalDifference(rows[i + 3].position, r.position)) }))
-    c.table('michelson-differences', '三组逐差位移及实际条纹数', [col('pair', '配对'), col('firstPosition', '起始镜位置', 'mm'), col('lastPosition', '终止镜位置', 'mm'), col('count', '跨越条纹数'), col('difference', '位移差', 'mm')], paired)
+    const paired = rows.slice(0, -3).map((r, i) => ({ pair: (i + 1) + '→' + (i + 4), firstPosition: r.position, lastPosition: rows[i + 3].position, count: rows[i + 3].order - r.order, difference: Math.abs(decimalDifference(rows[i + 3].position, r.position)) }))
+    c.table('michelson-differences', paired.length + '组逐差位移及实际条纹数', [col('pair', '配对'), col('firstPosition', '起始镜位置', 'mm'), col('lastPosition', '终止镜位置', 'mm'), col('count', '跨越条纹数'), col('difference', '位移差', 'mm')], paired)
     const count = 3 * h
     const average = mean(paired.map(r => r.difference))
     const lambda = 2 * average / count * 1e6
@@ -165,7 +168,7 @@ function michelson(c) {
     if (kind === 'expanded-relative') relative /= c.option('countCoverageFactor', { positive: true })
     result.uncertainty = c.propagate([{ name: '逐差位移', derivative: 2e6 / count, u: delta.u }, { name: '条纹数', derivative: -lambda / count, u: relative * count }])
     if (!result.uncertainty.complete) c.issue('UNCERTAINTY_INCOMPLETE', '波长不确定度分量不完整', 'results.wavelength.uncertainty')
-    c.assume('计数相对项是三组共同项，只合成一次，不再除√3。')
+    c.assume('计数相对项是各配对共同项，只合成一次，不再按配对数除根号。全部实测位置保留，不自动剔除记录。')
   })
 }
 

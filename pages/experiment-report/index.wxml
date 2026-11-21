@@ -3,6 +3,11 @@
     <scientific-text text-class="error" value="{{loadError}}" />
     <button class="primary" bindtap="onBack">返回实验表格</button>
   </view>
+  <view wx:elif="{{waitingForInput}}" class="card">
+    <text class="section-title">正在接收实验记录…</text>
+    <text class="hint">请稍候。若一直未显示结果，请返回表格页重新点击开始计算。</text>
+    <button class="secondary" bindtap="onBack">返回实验表格</button>
+  </view>
   <block wx:elif="{{loaded}}">
     <text class="eyebrow">BUCT LAB · 实验报告数据</text>
     <scientific-text text-class="title" value="{{title}}" />
@@ -116,7 +121,7 @@
       <button class="primary" bindtap="onCopy" disabled="{{calculating || !summary || summary.status === 'invalid'}}">{{summary && summary.kind === 'observation' ? '复制整理后的实验记录' : '复制计算过程与报告数据'}}</button>
       <button wx:if="{{calculationError}}" class="secondary" bindtap="onCalculate">重新计算</button>
       <button class="secondary" bindtap="onBack">返回修改原始数据</button>
-      <text class="hint">返回后原表继续保留。关闭小程序后请以已复制的记录为准。</text>
+      <text class="hint">原始记录自动保存在本机，重新打开相同实验可继续填写。重要记录建议同时复制备份。</text>
     </view>
   </block>
 </view>

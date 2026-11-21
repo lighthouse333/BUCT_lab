@@ -1,0 +1,315 @@
+{
+  "source": "B02传感器报告第2、4页；只保留读数，不含姓名等身份信息。",
+  "tables": {
+    "single-arm": [
+      {
+        "x": 0.0,
+        "forward1": 0.0,
+        "reverse1": 0.0,
+        "forward2": 0.0,
+        "reverse2": 4.0,
+        "forward3": 0.0,
+        "reverse3": -2.0
+      },
+      {
+        "x": 0.5,
+        "forward1": 17.0,
+        "reverse1": 14.0,
+        "forward2": 13.0,
+        "reverse2": 17.0,
+        "forward3": 13.0,
+        "reverse3": 11.0
+      },
+      {
+        "x": 1.0,
+        "forward1": 31.0,
+        "reverse1": 29.0,
+        "forward2": 27.0,
+        "reverse2": 30.0,
+        "forward3": 26.0,
+        "reverse3": 24.0
+      },
+      {
+        "x": 1.5,
+        "forward1": 44.0,
+        "reverse1": 42.0,
+        "forward2": 41.0,
+        "reverse2": 43.0,
+        "forward3": 42.0,
+        "reverse3": 38.0
+      },
+      {
+        "x": 2.0,
+        "forward1": 58.0,
+        "reverse1": 55.0,
+        "forward2": 55.0,
+        "reverse2": 58.0,
+        "forward3": 56.0,
+        "reverse3": 52.0
+      },
+      {
+        "x": 2.5,
+        "forward1": 73.0,
+        "reverse1": 69.0,
+        "forward2": 70.0,
+        "reverse2": 71.0,
+        "forward3": 70.0,
+        "reverse3": 65.0
+      },
+      {
+        "x": 3.0,
+        "forward1": 84.0,
+        "reverse1": 83.0,
+        "forward2": 85.0,
+        "reverse2": 85.0,
+        "forward3": 85.0,
+        "reverse3": 79.0
+      },
+      {
+        "x": 3.5,
+        "forward1": 98.0,
+        "reverse1": 97.0,
+        "forward2": 100.0,
+        "reverse2": 101.0,
+        "forward3": 100.0,
+        "reverse3": 94.0
+      },
+      {
+        "x": 4.0,
+        "forward1": 114.0,
+        "reverse1": 112.0,
+        "forward2": 114.0,
+        "reverse2": 114.0,
+        "forward3": 115.0,
+        "reverse3": 109.0
+      },
+      {
+        "x": 4.5,
+        "forward1": 128.0,
+        "reverse1": 127.0,
+        "forward2": 128.0,
+        "reverse2": 129.0,
+        "forward3": 129.0,
+        "reverse3": 125.0
+      },
+      {
+        "x": 5.0,
+        "forward1": 144.0,
+        "reverse1": 143.0,
+        "forward2": 144.0,
+        "reverse2": 145.0,
+        "forward3": 145.0,
+        "reverse3": 142.0
+      },
+      {
+        "x": 5.5,
+        "forward1": 158.0,
+        "reverse1": 159.0,
+        "forward2": 166.0,
+        "reverse2": 160.0,
+        "forward3": 160.0,
+        "reverse3": 158.0
+      },
+      {
+        "x": 6.0,
+        "forward1": 173.0,
+        "reverse1": 173.0,
+        "forward2": 175.0,
+        "reverse2": 175.0,
+        "forward3": 176.0,
+        "reverse3": 174.0
+      },
+      {
+        "x": 6.5,
+        "forward1": 188.0,
+        "reverse1": 189.0,
+        "forward2": 190.0,
+        "reverse2": 194.0,
+        "forward3": 191.0,
+        "reverse3": 190.0
+      },
+      {
+        "x": 7.0,
+        "forward1": 205.0,
+        "reverse1": 205.0,
+        "forward2": 207.0,
+        "reverse2": 208.0,
+        "forward3": 205.0,
+        "reverse3": 207.0
+      },
+      {
+        "x": 7.5,
+        "forward1": 221.0,
+        "reverse1": 222.0,
+        "forward2": 223.0,
+        "reverse2": 222.0,
+        "forward3": 222.0,
+        "reverse3": 222.0
+      },
+      {
+        "x": 8.0,
+        "forward1": 236.0,
+        "reverse1": 238.0,
+        "forward2": 239.0,
+        "reverse2": 240.0,
+        "forward3": 239.0,
+        "reverse3": 240.0
+      }
+    ],
+    "full-bridge": [
+      {
+        "x": 0.0,
+        "forward1": 0.0,
+        "reverse1": -3.0,
+        "forward2": 0.0,
+        "reverse2": -7.0,
+        "forward3": 0.0,
+        "reverse3": -9.0
+      },
+      {
+        "x": 0.5,
+        "forward1": 70.0,
+        "reverse1": 64.0,
+        "forward2": 70.0,
+        "reverse2": 58.0,
+        "forward3": 73.0,
+        "reverse3": 57.0
+      },
+      {
+        "x": 1.0,
+        "forward1": 142.0,
+        "reverse1": 133.0,
+        "forward2": 139.0,
+        "reverse2": 128.0,
+        "forward3": 144.0,
+        "reverse3": 127.0
+      },
+      {
+        "x": 1.5,
+        "forward1": 210.0,
+        "reverse1": 199.0,
+        "forward2": 208.0,
+        "reverse2": 194.0,
+        "forward3": 211.0,
+        "reverse3": 196.0
+      },
+      {
+        "x": 2.0,
+        "forward1": 280.0,
+        "reverse1": 267.0,
+        "forward2": 278.0,
+        "reverse2": 264.0,
+        "forward3": 283.0,
+        "reverse3": 265.0
+      },
+      {
+        "x": 2.5,
+        "forward1": 345.0,
+        "reverse1": 334.0,
+        "forward2": 345.0,
+        "reverse2": 331.0,
+        "forward3": 350.0,
+        "reverse3": 324.0
+      },
+      {
+        "x": 3.0,
+        "forward1": 414.0,
+        "reverse1": 401.0,
+        "forward2": 411.0,
+        "reverse2": 399.0,
+        "forward3": 416.0,
+        "reverse3": 392.0
+      },
+      {
+        "x": 3.5,
+        "forward1": 482.0,
+        "reverse1": 468.0,
+        "forward2": 478.0,
+        "reverse2": 469.0,
+        "forward3": 483.0,
+        "reverse3": 459.0
+      },
+      {
+        "x": 4.0,
+        "forward1": 542.0,
+        "reverse1": 534.0,
+        "forward2": 546.0,
+        "reverse2": 534.0,
+        "forward3": 554.0,
+        "reverse3": 523.0
+      },
+      {
+        "x": 4.5,
+        "forward1": 608.0,
+        "reverse1": 602.0,
+        "forward2": 613.0,
+        "reverse2": 598.0,
+        "forward3": 620.0,
+        "reverse3": 596.0
+      },
+      {
+        "x": 5.0,
+        "forward1": 677.0,
+        "reverse1": 667.0,
+        "forward2": 680.0,
+        "reverse2": 669.0,
+        "forward3": 682.0,
+        "reverse3": 657.0
+      },
+      {
+        "x": 5.5,
+        "forward1": 741.0,
+        "reverse1": 735.0,
+        "forward2": 745.0,
+        "reverse2": 730.0,
+        "forward3": 752.0,
+        "reverse3": 728.0
+      },
+      {
+        "x": 6.0,
+        "forward1": 805.0,
+        "reverse1": 798.0,
+        "forward2": 811.0,
+        "reverse2": 801.0,
+        "forward3": 813.0,
+        "reverse3": 792.0
+      },
+      {
+        "x": 6.5,
+        "forward1": 872.0,
+        "reverse1": 865.0,
+        "forward2": 874.0,
+        "reverse2": 865.0,
+        "forward3": 869.0,
+        "reverse3": 858.0
+      },
+      {
+        "x": 7.0,
+        "forward1": 937.0,
+        "reverse1": 934.0,
+        "forward2": 937.0,
+        "reverse2": 936.0,
+        "forward3": 933.0,
+        "reverse3": 926.0
+      },
+      {
+        "x": 7.5,
+        "forward1": 997.0,
+        "reverse1": 995.0,
+        "forward2": 1003.0,
+        "reverse2": 1000.0,
+        "forward3": 1003.0,
+        "reverse3": 995.0
+      },
+      {
+        "x": 8.0,
+        "forward1": 1067.0,
+        "reverse1": 1059.0,
+        "forward2": 1065.0,
+        "reverse2": 1060.0,
+        "forward3": 1069.0,
+        "reverse3": 1061.0
+      }
+    ]
+  }
+}

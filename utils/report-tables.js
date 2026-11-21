@@ -93,8 +93,8 @@ function reportTables(input, options = {}) {
   })
   if (id === 'michelson') rows('positions').forEach((r, i, list) => { if (i >= 3) r.difference = derived([r.position, list[i - 3].position], (a, b) => Math.abs(decimalDifference(a, b))) })
   if (id === 'rlc') rows('phase-200').forEach((r, i) => {
-    r.phase = derived([r.a, r.b], (a, b) => a > 0 && b >= 0 && b <= a ? Math.asin(b / a) : NaN)
-    if (r.phase != null && Array.isArray(options.phaseSigns) && [-1, 0, 1].includes(options.phaseSigns[i])) r.phase *= options.phaseSigns[i]
+    r.phase = derived([r.a, r.b], (a, b) => a > 0 && Math.abs(b) <= a && (options.phaseReading === 'signed' || b >= 0) ? Math.asin(b / a) : NaN)
+    if (options.phaseReading !== 'signed' && r.phase != null && Array.isArray(options.phaseSigns) && [-1, 0, 1].includes(options.phaseSigns[i])) r.phase *= options.phaseSigns[i]
   })
   if (id === 'ballistic-galvanometer') {
     const convention = options.chargeConvention

@@ -9,6 +9,14 @@ const infoFields = [
 ]
 const toObject = pairs => pairs.reduce((result, [key, value]) => { result[key] = value; return result }, {})
 
+function parameterVisibility(parameters, mode) {
+  const values = toObject(parameters.map(p => [p.key, p.value]))
+  return parameters.map(field => ({ ...field,
+    visible: (!field.modes || field.modes.includes(mode)) && (!field.when || values[field.when.key] === field.when.value),
+    ...(field.choices ? { choiceIndex: Math.max(0, field.choices.findIndex(c => c.value === field.value)), choiceLabel: (field.choices.find(c => c.value === field.value) || {}).label || '请选择' } : {}),
+  }))
+}
+
 function makeRow(definition, tableIndex, rowIndex, values = []) {
   return {
     id: 'row-' + rowIndex,
@@ -44,13 +52,13 @@ function createForm(experimentId) {
     modes: definition.modes || [],
     mode,
     info: infoFields.map(([key, label]) => ({ key, label, value: '' })),
-    parameters: definition.parameters.map((field, i) => ({ ...field, visible: !field.modes || field.modes.includes(mode), id: 'parameter-' + i, error: '' })),
+    parameters: parameterVisibility(definition.parameters.map((field, i) => ({ ...field, id: 'parameter-' + i, error: '' })), mode),
     tables: definition.tables.map((item, tableIndex) => {
       const result = {
         id: item.id, title: item.title, columns: item.columns, hint: item.hint || '',
         layout: item.layout, skipEmptyRows: !!item.skipEmptyRows,
         sourceNumber: item.unnumbered ? '' : item.sourceNumber || String(tableIndex + 1),
-        adjustable: !!item.adjustable, maxRows: item.maxRows || 60, modes: item.modes || [],
+        adjustable: !!item.adjustable, minRows: item.minRows || 1, maxRows: item.maxRows || 60, modes: item.modes || [],
         visible: !item.modes || item.modes.includes(mode),
         scrollTarget: '',
         rows: item.rows.map((values, rowIndex) => makeRow(item, tableIndex, rowIndex, values)),
@@ -65,6 +73,7 @@ function validateField(field) {
   const value = field.value.trim()
   if (!value) return field.optional ? '' : '请填写此项'
   if (field.fixedValue != null && value !== String(field.fixedValue)) return '本实验固定为 ' + field.fixedValue
+  if (field.kind === 'choice') return (field.choices || []).some(c => c.value === value) ? '' : '请选择有效的测量方式或单位'
   if (field.kind !== 'number') return ''
   // 不把空值、十六进制或 Infinity 当作测量数值；保留原始输入的小数位。
   if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(value) || !Number.isFinite(Number(value))) return '请输入有效数值'
@@ -112,7 +121,7 @@ function deriveParameters(parameters, fields) {
 // 报告处理表的测量输入。计算列与纯派生表不进入输入快照，防止回传旧结果。
 function collectInput(form) {
   return {
-    experimentId: form.experiment.id, schemaVersion: 3, templateVersion: '2026-10-28-report', mode: form.mode,
+    experimentId: form.experiment.id, schemaVersion: 3, templateVersion: '2026-11-21-verified', mode: form.mode,
     info: toObject(form.info.map(field => [field.key, field.value])),
     parameters: toObject(form.parameters.filter(field => field.visible !== false).map(field => [field.key, field.value])),
     tables: form.tables.filter(item => item.visible && item.columns.some(c => c.kind === 'number' || c.kind === 'text')).map(item => ({
@@ -139,4 +148,4 @@ function formatInput(form) {
   return lines.join('\n')
 }
 
-module.exports = { createForm, makeRow, validateField, validateForm, collectInput, formatInput, deriveParameters }
+module.exports = { createForm, makeRow, validateField, validateForm, collectInput, formatInput, deriveParameters, parameterVisibility }

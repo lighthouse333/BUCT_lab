@@ -86,6 +86,6 @@
     <text>2θ=(2θ左+2θ右)/2，θ=(2θ左+2θ右)/4。按完整测次统计，不把左右游标当成两次独立测量。</text>
     <scientific-text text-class="formula-note" value="u_A(θ)=tₚ·s/√n。tₚ取谢超然《大学物理实验》(2015)表1.1.2；未列的n不自动插值。" />
     <scientific-text text-class="formula-note" value="一级衍射λ=d·sinθ；独立项传播u²(λ)=(λ·u(d)/d)²+(d·cosθ)²·[u_A²(θ)+u_B²(θ)]。" />
-    <text>从报告结果页返回可继续修改；关闭小程序前请及时复制记录。</text>
+    <text>{{draftMessage}}</text>
   </view>
 </view>
