@@ -1,6 +1,7 @@
 const { calculateGroup, statistics, propagateWavelength } = require('../../utils/spectral-analysis')
 const { collectSpectralInput } = require('../../utils/experiment-report')
 const { openReport } = require('../../utils/report-navigation')
+const { saveSpectralDraft, restoreSpectralDraft } = require('../../utils/experiment-drafts')
 const fields = ['minusLeft', 'minusRight', 'plusLeft', 'plusRight']
 const fmt = value => value == null ? '—' : Number(value.toPrecision(8)).toString()
 const angle = value => {
@@ -19,12 +20,19 @@ Page({
     reference: '', observedPhenomenon: '', elementAnalysis: '', result: null, message: '', parameterError: '',
     calculating: false,
   },
-  onLoad() { this.recalculate() },
+  onLoad() { const saved = restoreSpectralDraft(typeof wx === 'undefined' ? null : wx); if (saved) this.setData(saved); this.recalculate() },
+  onHide() { this.persistDraft() },
+  onUnload() { this.persistDraft() },
+  persistDraft() {
+    const message = saveSpectralDraft(this.data, typeof wx === 'undefined' ? null : wx)
+    if (message && message !== this.data.draftMessage) this.setData({ draftMessage: message })
+  },
   onInfoInput(e) {
     const key = e.currentTarget.dataset.key
     if (!['studentClass', 'studentName', 'studentId', 'teacher', 'lineName', 'density', 'reference', 'relativeGratingUncertainty', 'angularInstrumentUncertainty', 'observedPhenomenon', 'elementAnalysis'].includes(key)) return
     this.setData({ [key]: e.detail.value })
     if (['density', 'reference', 'relativeGratingUncertainty', 'angularInstrumentUncertainty'].includes(key)) this.recalculate()
+    else this.persistDraft()
   },
   onReadingInput(e) {
     const { index, field } = e.currentTarget.dataset
@@ -93,6 +101,7 @@ Page({
       }
     }
     this.setData({ rows, result, message, parameterError, tableWidth: 1150 })
+    this.persistDraft()
   },
   onCopy() {
     const r = this.data.result

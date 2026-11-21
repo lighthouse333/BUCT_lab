@@ -1,12 +1,12 @@
 # 实验报告数据计算接口
 
-更新：2026-10-28。16个实验均已接入“开始计算”及统一结果页，光的偏振使用“整理实验记录”。公式依据见[公式汇总](experiment-formulas.md)，表式依据见[报告表核对](report-table-audit.md)，数值修约及自动选点依据见[教材规则](textbook-report-rules.md)。
+更新：2026-11-21。16个实验均已接入“开始计算”及统一结果页，光的偏振使用“整理实验记录”。公式依据见[公式汇总](experiment-formulas.md)，表式依据见[报告表核对](report-table-audit.md)，数值修约及自动选点依据见[教材规则](textbook-report-rules.md)。
 
 ## 页面流程
 
 填写实验报告要求的测量格 → 检查 → 开始计算 → 结果、原式、代入式、自动选点、报告表、作图坐标及报告要求。
 
-结果页没有计算方法、不确定度口径或补充条件的选择控件。程序采用`textbook-profile.js`中的固定规则。装置尺寸、实际仪器误差、读数等真实测量信息在实验录入页填写，不能由程序猜成0。返回录入页后保留当前页面内存中的原始记录；关闭小程序不保证保存。PDF/Word生成、持久化及Excel导入尚未实现。
+结果页没有计算方法、不确定度口径或补充条件的选择控件。程序采用`textbook-profile.js`中的固定规则。装置尺寸、实际仪器误差、读数等真实测量信息在实验录入页填写，不能由程序猜成0。录入页支持真实装置的直接伸长/光杠杆、霍尔换向次序、RLC幅值/有符号读数及应变输出V/mV选择；不改变统一的不确定度规则。16个实验均自动保存原始输入到本机存储；重新打开相同实验可恢复，未选的塞曼方案也保留。存储失败会提示复制备份。PDF/Word生成及Excel导入尚未实现。
 
 页面间通过事件通道传递原始输入，不将实验记录放进网址。重复点击、跳转失败、无效数据和重复接收事件均有保护。
 
@@ -34,12 +34,12 @@ const reportJSON = serializeReport(report)
 
 ## 输入版本
 
-输入为`schemaVersion: 3`、`templateVersion: '2026-10-28-report'`。旧版1/2的单缝扫描表、声速合表等须重新按报告表填写，不能静默混算。
+输入为`schemaVersion: 3`、`templateVersion: '2026-11-21-verified'`。旧版1/2的单缝扫描表、声速合表等须重新按报告表填写，不能静默混算。
 
 ```js
 {
   schemaVersion: 3,
-  templateVersion: '2026-10-28-report',
+  templateVersion: '2026-11-21-verified',
   experimentId: 'single-slit',
   mode: '',
   info: { studentClass: '', studentName: '', studentId: '' },
@@ -81,7 +81,7 @@ RLC使用范围内的实测极大值；最大值在扫描边缘时提示扩展�
 
 | 字段 | 含义 |
 | --- | --- |
-| `reportSchemaVersion` / `formulaVersion` | 当前为2 / 2026-10-28-report |
+| `reportSchemaVersion` / `formulaVersion` | 当前为2 / 2026-11-21-verified |
 | `experiment` / `info` / `rawInput` | 实验信息及不改写的输入快照 |
 | `reportTables` | 原报告表编号、标题、列、横向/分组版式、行、平均栏；作为报告表格的权威输出 |
 | `rawTableSchemas` | 当前方案的表式、固定格定义 |

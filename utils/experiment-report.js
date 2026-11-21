@@ -33,7 +33,7 @@ function cloneData(value) {
 }
 
 function baseReport() {
-  return { reportSchemaVersion: 2, formulaVersion: '2026-10-28-report', inputSchemaVersion: null, experiment: null,
+  return { reportSchemaVersion: 2, formulaVersion: '2026-11-21-verified', inputSchemaVersion: null, experiment: null,
     status: 'partial', kind: 'quantitative', reportReady: false, reportFinished: false,
     info: {}, rawInput: null, processingOptions: {}, assumptions: [], issues: [], results: [], tables: [], charts: [],
     steps: [], observations: [], referenceMaterial: [], rawTableSchemas: [], reportTables: [], tasks: [], requirements: { processing: [], submission: [], notes: [] } }
@@ -66,6 +66,9 @@ function validateProvidedValues(c) {
     if (value != null && String(value).trim() !== '' && field.kind === 'number') c.run(path, () => numeric(value, path, field))
   }
   def.parameters.filter(p => !p.modes || p.modes.includes(c.input.mode)).forEach(p => check(c.p[p.key], p, 'parameters.' + p.key))
+  def.parameters.filter(p => p.choices && c.p[p.key] != null).forEach(p => {
+    if (!p.choices.some(choice => choice.value === c.p[p.key])) c.issue('INVALID_CHOICE', '请选择有效的' + p.label, 'parameters.' + p.key, 'error')
+  })
   def.tables.filter(t => !t.modes || t.modes.includes(c.input.mode)).forEach(t => {
     if (t.columns.some(c => c.kind === 'number' || c.kind === 'text') && !c.input.tables.some(inputTable => inputTable.id === t.id)) c.issue('MISSING_TABLE', '缺少测量输入表：' + t.title, 'tables.' + t.id)
   })
@@ -166,7 +169,7 @@ function calculateFormReport(form, options = {}) {
 
 function collectSpectralInput(data = {}) {
   data = data || {}
-  return { schemaVersion: 3, templateVersion: '2026-10-28-report', experimentId: 'spectral-analysis', mode: '',
+  return { schemaVersion: 3, templateVersion: '2026-11-21-verified', experimentId: 'spectral-analysis', mode: '',
     info: { studentClass: data.studentClass || '', studentName: data.studentName || '', studentId: data.studentId || '', teacher: data.teacher || '', lineName: data.lineName || '' },
     parameters: { density: data.density, relativeGratingUncertainty: data.relativeGratingUncertainty, angularInstrumentUncertainty: data.angularInstrumentUncertainty || '', reference: data.reference || '',
       observedPhenomenon: data.observedPhenomenon || '', elementAnalysis: data.elementAnalysis || '' },

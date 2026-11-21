@@ -1,15 +1,16 @@
 const { definitions } = require('../../utils/experiment-forms')
-const { createForm, makeRow, validateField, validateForm, collectInput, formatInput, deriveParameters } = require('../../utils/experiment-input')
+const { createForm, makeRow, validateField, validateForm, collectInput, formatInput, deriveParameters, parameterVisibility } = require('../../utils/experiment-input')
 const { buildTableView } = require('../../utils/table-layout')
 const { openReport } = require('../../utils/report-navigation')
 const { refreshFormTables } = require('../../utils/report-tables')
 const { textbookOptions } = require('../../utils/textbook-profile')
+const { saveFormDraft, restoreFormDraft } = require('../../utils/experiment-drafts')
 
 Page({
   data: { experiment: null, loadError: '', parameters: [], tables: [], info: [], modes: [], mode: '', observationOnly: false, introSections: [], derivedParameters: [], reportRequirements: [], reportSubmission: [], checked: false, message: '', errorCount: 0, calculating: false },
 
   onLoad(options = {}) {
-    const form = createForm(options.id)
+    const form = restoreFormDraft(options.id, wx) || createForm(options.id)
     if (!form) {
       this.setData({ loadError: '未找到对应的实验输入表，请返回首页重新选择。' })
       return
@@ -20,16 +21,24 @@ Page({
   },
 
   onShow() { if (this.data.experiment) this.refreshCalculations() },
+  onHide() { this.persistDraft() },
+  onUnload() { this.persistDraft() },
+  persistDraft() {
+    const message = saveFormDraft(this.data, wx)
+    if (message && message !== this.data.draftMessage) this.setData({ draftMessage: message })
+  },
 
   refreshCalculations() {
     const input = collectInput(this.data)
     this.setData({ tables: refreshFormTables(this.data, textbookOptions(input)) })
+    this.persistDraft()
   },
 
   onInfoInput(e) {
     const index = Number(e.currentTarget.dataset.index)
     if (!Number.isInteger(index) || !this.data.info[index]) return
     this.setData({ [`info[${index}].value`]: e.detail.value })
+    this.persistDraft()
   },
 
   onParameterInput(e) {
@@ -37,6 +46,15 @@ Page({
     if (!Number.isInteger(index) || !this.data.parameters[index] || this.data.parameters[index].readOnly) return
     this.setData({ [`parameters[${index}].value`]: e.detail.value, [`parameters[${index}].error`]: '', checked: false, message: '', errorCount: 0 })
     this.setData({ derivedParameters: deriveParameters(this.data.parameters, this.data.derivedParameters) })
+    this.refreshCalculations()
+  },
+
+  onParameterChoice(e) {
+    const index = Number(e.currentTarget.dataset.index), selected = Number(e.detail.value)
+    const field = this.data.parameters[index]
+    if (!field || !field.choices || !field.choices[selected]) return
+    const parameters = this.data.parameters.map((p, i) => i === index ? { ...p, value: field.choices[selected].value, error: '' } : p)
+    this.setData({ parameters: parameterVisibility(parameters, this.data.mode), checked: false, message: '', errorCount: 0 })
     this.refreshCalculations()
   },
 
@@ -73,7 +91,7 @@ Page({
     if (!this.data.modes.some(item => item.id === mode)) return
     this.setData({
       mode,
-      parameters: this.data.parameters.map(field => ({ ...field, visible: !field.modes || field.modes.includes(mode), error: '' })),
+      parameters: parameterVisibility(this.data.parameters.map(field => ({ ...field, error: '' })), mode),
       tables: this.data.tables.map(item => ({ ...item, visible: !item.modes.length || item.modes.includes(mode), scrollTarget: '' })),
       checked: false, message: '', errorCount: 0,
     })
@@ -93,7 +111,7 @@ Page({
   onRemoveRow(e) {
     const index = Number(e.currentTarget.dataset.table)
     const table = this.data.tables[index]
-    if (!Number.isInteger(index) || !table || !table.visible || !table.adjustable || table.rows.length <= 1) return
+    if (!Number.isInteger(index) || !table || !table.visible || !table.adjustable || table.rows.length <= table.minRows) return
     const remove = () => {
       const next = { ...table, rows: table.rows.slice(0, -1) }
       this.setData({ [`tables[${index}]`]: { ...next, ...buildTableView(next, index) }, checked: false, message: '', errorCount: 0 })

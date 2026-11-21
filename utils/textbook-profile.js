@@ -6,7 +6,7 @@ function textbookOptions(input) {
   const copyLimit = (option, parameter) => { if (p[parameter] != null && String(p[parameter]).trim() !== '') limits[option] = p[parameter] }
   const options = { uncertaintyPolicy: 'course', coverageFactor: 2, autoGraph: true, limits }
   if (id === 'young-modulus') {
-    options.extensionModel = 'optical-lever' // 教材P71–72，式3.1.6。
+    options.extensionModel = p.extensionMethod || 'optical-lever'
     options.leverDistanceM = p.leverDistanceM
     options.leverArmM = p.leverArmM
     copyLimit('extensionMm', 'extensionLimitMm'); copyLimit('diameterMm', 'diameterLimit')
@@ -28,8 +28,10 @@ function textbookOptions(input) {
     options.autoCoolingTangent = true
   } else if (id === 'rlc') {
     options.peakDefinition = 'component-voltage'; options.autoFeatures = true
+    options.phaseReading = p.phaseReading || 'magnitude'
   } else if (id === 'hall-effect') {
     options.carrierModel = 'textbook'
+    options.hallSequence = p.hallSequence || 'alternating'
     for (const key of ['longitudinalVoltageMv', 'longitudinalCurrentMa', 'voltageContactDistanceMm', 'sampleWidthMm']) if (p[key] != null) options[key] = p[key]
   } else if (id === 'fresnel-biprism') {
     for (const [option, parameter] of [['distanceCm', 'distanceLimitCm'], ['fringeSpanMm', 'fringeSpanLimitMm'], ['image1Mm', 'image1LimitMm'], ['image2Mm', 'image2LimitMm']]) copyLimit(option, parameter)

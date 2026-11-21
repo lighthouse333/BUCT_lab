@@ -1,4 +1,5 @@
 @import "../spectral-analysis/index.wxss";
+.choice-input { padding: 24rpx 18rpx; background: #edf3ff; border-radius: 10rpx; color: #204fa3; font-size: 25rpx; line-height: 1.6; }
 
 .table-scroll { margin: 20rpx 0; }
 .cell { display: flex; flex-direction: column; justify-content: center; flex-shrink: 0; box-sizing: border-box; min-height: 94rpx; border-right: 2rpx solid #64748b; border-bottom: 2rpx solid #64748b; background: #eef4ff; }

@@ -34,6 +34,7 @@
       <block wx:for="{{parameters}}" wx:key="key">
         <label wx:if="{{item.visible}}" class="full-label" id="{{item.id}}"><scientific-text value="{{item.label + (item.optional ? '（选填）' : '')}}" />
           <scientific-text wx:if="{{item.readOnly}}" text-class="source-fixed" value="{{item.value}}" />
+          <picker wx:elif="{{item.kind === 'choice'}}" range="{{item.choices}}" range-key="label" value="{{item.choiceIndex}}" data-index="{{index}}" bindchange="onParameterChoice"><view class="choice-input">{{item.choiceLabel}} ▾</view></picker>
           <input wx:elif="{{item.kind === 'text'}}" class="{{item.error ? 'input-error' : ''}}" value="{{item.value}}" data-index="{{index}}" bindinput="onParameterInput" bindblur="onParameterBlur" placeholder="{{item.placeholder || '按实际实验填写'}}" maxlength="200" aria-label="{{item.label}}" />
           <scientific-input wx:else value="{{item.value}}" data-index="{{index}}" bindinput="onParameterInput" bindblur="onParameterBlur" placeholder="{{item.placeholder || '按实际实验填写'}}" label="{{item.label}}" invalid="{{!!item.error}}" />
           <scientific-text wx:if="{{item.error}}" text-class="error" value="{{item.error}}" />
@@ -86,7 +87,7 @@
         </scroll-view>
         <view wx:if="{{table.adjustable}}" class="actions">
           <button data-table="{{tableIndex}}" bindtap="onAddRow" disabled="{{table.rows.length >= table.maxRows}}">增加测量记录</button>
-          <button data-table="{{tableIndex}}" bindtap="onRemoveRow" disabled="{{table.rows.length <= 1}}">删除最后一组</button>
+          <button data-table="{{tableIndex}}" bindtap="onRemoveRow" disabled="{{table.rows.length <= table.minRows}}">删除最后一组</button>
         </view>
       </view>
     </block>
@@ -101,6 +102,7 @@
       <scientific-text text-class="section-title" value="{{observationOnly ? '核对实验记录' : '核对原始数据'}}" />
       <scientific-text wx:if="{{message}}" text-class="{{errorCount ? 'error' : 'success'}}" value="{{message}}" />
       <text class="hint">{{observationOnly ? '填写完整后可进入实验记录整理页，查看并复制报告所需记录。' : '填写完整后开始计算，按教材要求查看处理表、自动选点与报告数据。'}}从结果页返回可继续修改原表。</text>
+      <text class="hint">{{draftMessage}}</text>
       <button class="primary" bindtap="onStartCalculation" loading="{{calculating}}" disabled="{{calculating}}">{{observationOnly ? '整理实验记录' : '开始计算'}}</button>
       <button class="secondary" bindtap="onCheck">{{observationOnly ? '检查记录' : '检查输入'}}</button>
       <button class="secondary" bindtap="onCopy">{{observationOnly ? '复制实验记录' : '复制原始数据'}}</button>

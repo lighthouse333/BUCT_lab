@@ -103,7 +103,7 @@ function buildTableView(table, tableIndex) {
     const xs = widths.map((_, i) => widths.slice(0, i).reduce((a, b) => a + b, 0))
     const width = widths.reduce((a, b) => a + b, 0)
     add(0, 0, widths[0], 270, table.columns[0].label, { heading: true })
-    add(xs[1], 0, width - widths[0], 90, '输出电压 V/V', { heading: true })
+    add(xs[1], 0, width - widths[0], 90, '输出电压（单位见实验参数）', { heading: true })
     for (let i = 0; i < 3; i++) add(xs[1 + i * 3], 90, 480, 90, ['第一次循环', '第二次循环', '第三次循环'][i], { heading: true })
     for (let c = 1; c <= 9; c++) add(xs[c], 180, widths[c], 90, table.columns[c].label, { heading: true })
     add(xs[10], 90, widths[10], 180, '校准平均值', { heading: true })

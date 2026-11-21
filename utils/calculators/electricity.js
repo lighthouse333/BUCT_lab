@@ -53,9 +53,17 @@ function ballistic(c) {
 }
 
 function strain(c) {
+  const unit = c.p.outputVoltageUnit || 'V'
+  if (!['V', 'mV'].includes(unit)) throw new CalculationError('INVALID_VOLTAGE_UNIT', '传感器输出单位请选择V或mV', 'parameters.outputVoltageUnit')
+  const scale = unit === 'mV' ? 1e-3 : 1
+  c.assume('应变原始输出读数采用' + unit + '；计算层统一换算为V，百分误差不受单位换算影响。')
   for (const id of ['single-arm', 'full-bridge']) c.run(id, () => {
     const fields = ['x', ...flatMap([1, 2, 3], i => ['forward' + i, 'reverse' + i])]
-    const rows = c.rows(id, fields, { count: 17 })
+    const rows = c.rows(id, fields, { count: 17 }).map(row => {
+      const result = { ...row }
+      fields.filter(key => key !== 'x').forEach(key => { result[key] *= scale })
+      return result
+    })
     if (new Set(rows.map(r => r.x)).size !== rows.length) throw new CalculationError('DUPLICATE_DISPLACEMENT', '位移测量点不应重复，请核对17个位移点', 'tables.' + id)
     const processed = rows.map(r => {
       const result = { ...r, mean: mean(fields.filter(k => k !== 'x').map(k => r[k])) }
@@ -141,9 +149,12 @@ function pn(c) {
 function hall(c) {
   const thickness = c.run('thickness', () => c.param('thickness', { positive: true }) * 1e-3)
   const coefficient = c.run('magnetCoefficient', () => c.param('magnetCoefficient', { positive: true }))
-  const hallRows = id => c.rows(id, id === 'working-current' ? ['is', 'u1', 'u2', 'u3', 'u4'] : id === 'magnet-current' ? ['im', 'u1', 'u2', 'u3', 'u4'] : ['x', 'u1', 'u2', 'u3', 'u4'], { min: 2 }).map(r => ({ ...r,
-    hallVoltage: (Math.abs(r.u1) + Math.abs(r.u2) + Math.abs(r.u3) + Math.abs(r.u4)) / 4,
-    ...(c.options.polaritySequence === 'textbook' ? { signedHallVoltage: (r.u1 - r.u2 + r.u3 - r.u4) / 4 } : {}) }))
+  const sequence = c.choice('hallSequence', ['alternating', 'paired'])
+  c.assume(sequence === 'alternating' ? '换向次序为(+I,+B)、(-I,+B)、(-I,-B)、(+I,-B)，U_H=(U1-U2+U3-U4)/4。' : '换向次序为(+I,+B)、(-I,+B)、(+I,-B)、(-I,-B)，U_H=(U1-U2-U3+U4)/4。')
+  const hallRows = id => c.rows(id, id === 'working-current' ? ['is', 'u1', 'u2', 'u3', 'u4'] : id === 'magnet-current' ? ['im', 'u1', 'u2', 'u3', 'u4'] : ['x', 'u1', 'u2', 'u3', 'u4'], { min: 2 }).map(r => {
+    const signedHallVoltage = (r.u1 - r.u2 + (sequence === 'alternating' ? r.u3 - r.u4 : r.u4 - r.u3)) / 4
+    return { ...r, signedHallVoltage, hallVoltage: Math.abs(signedHallVoltage) }
+  })
   const working = c.run('working-current', () => {
     const rows = hallRows('working-current'); rows.forEach(r => c.requirePositive(r.is, 'tables.working-current.is'))
     c.table('hall-working', '霍尔电压与工作电流', [col('is', '工作电流', 'mA'), col('u1', 'U₁', 'mV'), col('u2', 'U₂', 'mV'), col('u3', 'U₃', 'mV'), col('u4', 'U₄', 'mV'), col('hallVoltage', '霍尔幅值', 'mV'), col('signedHallVoltage', '约定有符号电压', 'mV')], rows)
@@ -266,20 +277,23 @@ function rlc(c) {
       { id: 'second', label: 'R=' + c.p.resistance2 + 'Ω', points: rows.map(r => ({ x: r.frequency, y: r.ur })) }])
   })
   c.run('phase', () => {
-    const rows = c.rows('phase-200', ['frequency', 'a', 'b'], { min: 2, rules: { frequency: { positive: true }, a: { positive: true }, b: { min: 0 } } })
+    const rows = c.rows('phase-200', ['frequency', 'a', 'b'], { min: 2, rules: { frequency: { positive: true }, a: { positive: true } } })
+    const reading = c.choice('phaseReading', ['magnitude', 'signed'])
     const signs = c.options.phaseSigns
     if (signs != null && (!Array.isArray(signs) || signs.length !== rows.length || signs.some(v => ![-1, 0, 1].includes(v)))) throw new CalculationError('INVALID_PHASE_SIGNS', 'phaseSigns须与相频表等长，逐项为-1、0或1', 'options.phaseSigns')
-    if (!signs) c.manual('phase-direction', '报告φ格按原表arcsin(B/A)列出主值幅值；结合实际通道与椭圆倾斜分析超前/滞后，不把理论相位的符号冒充实测。')
+    if (!signs && reading !== 'signed') c.manual('phase-direction', '报告φ格按原表arcsin(B/A)列出主值幅值；结合实际通道与椭圆倾斜分析超前/滞后，不把理论相位的符号冒充实测。')
     const processed = rows.map((r, i) => {
-      if (r.b > r.a) throw new CalculationError('ELLIPSE_RATIO', '椭圆法要求0≤B/A≤1', 'tables.phase-200.rows[' + i + ']')
-      const magnitude = Math.asin(r.b / r.a)
+      if (Math.abs(r.b) > r.a) throw new CalculationError('ELLIPSE_RATIO', '椭圆法要求|B/A|≤1', 'tables.phase-200.rows[' + i + ']')
+      if (reading === 'magnitude' && r.b < 0) throw new CalculationError('SIGNED_PHASE_REQUIRED', 'B为负值：请确认接线符号，并将B读数方式选为已经标注正负', 'tables.phase-200.rows[' + i + '].b')
+      const magnitude = Math.asin(Math.abs(r.b) / r.a)
       if (signs && signs[i] === 0 && magnitude > 1e-12) throw new CalculationError('PHASE_SIGN_ZERO', '非零相位幅值不能用0符号清除', 'options.phaseSigns[' + i + ']')
-      return { ...r, ratio: r.b / r.a, phaseMagnitude: magnitude, phase: signs ? signs[i] * magnitude : null,
+      return { ...r, ratio: r.b / r.a, phaseMagnitude: magnitude, phase: reading === 'signed' ? Math.asin(r.b / r.a) : signs ? signs[i] * magnitude : null,
         theory: circuit ? Math.atan((2 * Math.PI * r.frequency * 1000 * circuit.L - 1 / (2 * Math.PI * r.frequency * 1000 * circuit.C)) / (circuit.r1 + circuit.loss)) : null }
     })
     c.table('rlc-phase', '椭圆法相频处理', [col('frequency', 'f', 'kHz'), col('a', 'A', 'V'), col('b', 'B', 'V'), col('ratio', 'B/A'), col('phaseMagnitude', '主值幅值', 'rad'), col('phase', '按接线确定的φ', 'rad'), col('theory', '电压减电流理论相位', 'rad')], processed)
-    c.chart('rlc-phase', '相频特性', '频率', 'kHz', '相位差', 'rad', [{ id: signs ? 'signed' : 'magnitude', label: signs ? '实测有符号相位' : '实测主值幅值（未定符号）', points: processed.map(r => ({ x: r.frequency, y: signs ? r.phase : r.phaseMagnitude })) },
-      ...(circuit ? [{ id: 'theory', label: signs ? 'U相位减I相位的理论值' : '理论相位主值幅值（不推断实测符号）', type: 'line', points: processed.map(r => ({ x: r.frequency, y: signs ? r.theory : Math.abs(r.theory) })) }] : [])])
+    const signed = !!signs || reading === 'signed'
+    c.chart('rlc-phase', '相频特性', '频率', 'kHz', '相位差', 'rad', [{ id: signed ? 'signed' : 'magnitude', label: signed ? '实测有符号相位' : '实测主值幅值（未定符号）', points: processed.map(r => ({ x: r.frequency, y: signed ? r.phase : r.phaseMagnitude })) },
+      ...(circuit ? [{ id: 'theory', label: signed ? 'U相位减I相位的理论值' : '理论相位主值幅值（不推断实测符号）', type: 'line', points: processed.map(r => ({ x: r.frequency, y: signed ? r.theory : Math.abs(r.theory) })) }] : [])])
   })
 }
 

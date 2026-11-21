@@ -229,12 +229,14 @@ test('光的偏振进入记录整理页，不生成数值结果；物理错误�
 test('直接打开、未知实验及延迟收到数据均有明确状态，页面事件和路由注册完整', () => {
   const empty = harness('pages/experiment-report/index.js', eventChannel())
   empty.page.onLoad(); empty.page.onReady()
-  assert.match(empty.page.data.loadError, /表格页/)
+  assert.equal(empty.page.data.waitingForInput, true)
+  assert.equal(empty.page.data.loadError, '')
   empty.page.onBack()
   assert.equal(empty.calls.back.length, 1)
   const f = fixture('strain-sensor')
   empty.page.channel.emit('reportInput', { input: f.input, settings: {} })
   assert.equal(empty.page.data.loadError, '')
+  assert.equal(empty.page.data.waitingForInput, false)
   assert.equal(empty.page.data.summary.status, 'complete')
   const bad = fixture('young-modulus'); bad.input.experimentId = 'unknown'
   assert.match(resultPage(bad).page.data.loadError, /不受支持/)

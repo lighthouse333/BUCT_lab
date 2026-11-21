@@ -2,23 +2,24 @@ const { calculateReport, formatReport } = require('../../utils/experiment-report
 const { reportView } = require('../../utils/report-view')
 
 Page({
-  data: { loaded: false, loadError: '', title: '', summary: null, calculating: false, calculationError: '', showCoordinates: false },
+  data: { loaded: false, waitingForInput: false, loadError: '', title: '', summary: null, calculating: false, calculationError: '', showCoordinates: false },
 
   onLoad() {
     const channel = this.getOpenerEventChannel()
     if (!channel || !channel.on) { this.setData({ loadError: '请从实验表格页点击“开始计算”进入。' }); return }
     this.channel = channel
+    this.setData({ waitingForInput: true })
     channel.on('reportInput', payload => {
       if (this.data.loaded) return
       if (!payload || !payload.input || !payload.input.experimentId) { this.setData({ loadError: '未收到实验数据，请返回表格页重新计算。' }); return }
       this.input = payload.input
-      this.setData({ loaded: true, loadError: '' })
+      this.setData({ loaded: true, waitingForInput: false, loadError: '' })
       this.onCalculate()
     })
   },
 
   onReady() {
-    if (!this.data.loaded && !this.data.loadError) this.setData({ loadError: '未收到实验记录，请从表格页点击“开始计算”进入。' })
+    if (!this.data.loaded && !this.data.loadError) this.setData({ waitingForInput: true })
   },
 
   onCalculate() {
