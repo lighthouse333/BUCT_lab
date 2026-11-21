@@ -4,40 +4,40 @@
   "packOptions": {
     "ignore": [
       {
-        "type": "folder",
-        "value": "audit_2026-11-20"
+        "value": "audit_2026-11-20",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "verified_project"
+        "value": "verified_project",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "BUCT_lab-main"
+        "value": "BUCT_lab-main",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "PN结实验后端"
+        "value": "PN结实验后端",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "tests"
+        "value": "tests",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "docs"
+        "value": "docs",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "tmp"
+        "value": "tmp",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "新建文件夹"
+        "value": "新建文件夹",
+        "type": "folder"
       },
       {
-        "type": "file",
-        "value": "BUCT_lab-main.zip"
+        "value": "BUCT_lab-main.zip",
+        "type": "file"
       }
     ],
     "include": []
@@ -71,6 +71,6 @@
     "tabIndent": "auto",
     "tabSize": 2
   },
-  "appid": "wx3ce830a2d4d5f3a4",
+  "appid": "wxbccefb22cf2d256f",
   "simulatorPluginLibVersion": {}
 }

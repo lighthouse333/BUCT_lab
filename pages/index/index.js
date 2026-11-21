@@ -12,6 +12,25 @@ Page({
     selectedExperiment: null,
   },
 
+  onLoad() {
+    wx.showShareMenu({
+      menus: ['shareAppMessage', 'shareTimeline'],
+    })
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '北化实验助手',
+      path: '/pages/index/index',
+    }
+  },
+
+  onShareTimeline() {
+    return {
+      title: '北化实验助手',
+    }
+  },
+
   onSearchInput(e) {
     this.updateFilter(e.detail.value, this.data.activeCategory)
   },
